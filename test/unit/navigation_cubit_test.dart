@@ -1,6 +1,6 @@
-import 'package:bloc_test/bloc_test.dart';
+﻿import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spotify/presentation/MainWrapper/cubit/cubit/navigation_cubit.dart';
+import 'package:soundora/presentation/MainWrapper/cubit/cubit/navigation_cubit.dart';
 
 void main() {
   group('NavigationCubit', () {

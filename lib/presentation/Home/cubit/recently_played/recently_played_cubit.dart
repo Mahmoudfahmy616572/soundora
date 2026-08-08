@@ -1,8 +1,8 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:hive/hive.dart';
-import 'package:spotify/data/models/songs/songs_model.dart';
+import 'package:soundora/data/models/songs/songs_model.dart';
 
 import 'recently_played_state.dart';
 

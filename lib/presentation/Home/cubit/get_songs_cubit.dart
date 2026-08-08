@@ -1,8 +1,8 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spotify/domain/usecase/songs/get_charts_usecase.dart';
-import 'package:spotify/domain/usecase/songs/get_songs_usecase.dart';
-import 'package:spotify/presentation/Home/cubit/get_songs_state.dart';
-import 'package:spotify/serviece_locator.dart';
+﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:soundora/domain/usecase/songs/get_charts_usecase.dart';
+import 'package:soundora/domain/usecase/songs/get_songs_usecase.dart';
+import 'package:soundora/presentation/Home/cubit/get_songs_state.dart';
+import 'package:soundora/serviece_locator.dart';
 
 class GetSongsCubit extends Cubit<GetSongsState> {
   final GetChartsUsecase _getChartsUsecase;

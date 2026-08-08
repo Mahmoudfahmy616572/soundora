@@ -1,6 +1,6 @@
-import 'dart:math';
-import 'package:spotify/data/sources/otp/otp_data_source.dart';
-import 'package:spotify/domain/repositories/otp/otp_repo.dart';
+﻿import 'dart:math';
+import 'package:soundora/data/sources/otp/otp_data_source.dart';
+import 'package:soundora/domain/repositories/otp/otp_repo.dart';
 
 class OtpRepositoryImpl implements OtpRepository {
   final OtpDataSource _otpDataSource;

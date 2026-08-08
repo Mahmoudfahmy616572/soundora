@@ -1,7 +1,7 @@
-import 'dart:math';
+﻿import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/presentation/LyricsEmotion/models/lyric_emotion_model.dart';
+import 'package:soundora/presentation/LyricsEmotion/models/lyric_emotion_model.dart';
 
 class EmotionBackgroundPainter extends CustomPainter {
   final EmotionType dominantEmotion;

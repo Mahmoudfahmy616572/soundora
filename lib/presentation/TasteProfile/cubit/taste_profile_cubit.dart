@@ -1,11 +1,11 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
-import 'package:spotify/data/models/taste_profile/taste_profile.dart';
-import 'package:spotify/data/sources/listening_history/genre_detector.dart';
-import 'package:spotify/data/sources/listening_history/listening_data_source.dart';
+import 'package:soundora/data/models/taste_profile/taste_profile.dart';
+import 'package:soundora/data/sources/listening_history/genre_detector.dart';
+import 'package:soundora/data/sources/listening_history/listening_data_source.dart';
 
 part 'taste_profile_state.dart';
 

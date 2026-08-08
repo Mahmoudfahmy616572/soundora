@@ -1,5 +1,5 @@
-import 'package:equatable/equatable.dart';
-import 'package:spotify/data/models/songs/songs_model.dart';
+﻿import 'package:equatable/equatable.dart';
+import 'package:soundora/data/models/songs/songs_model.dart';
 
 abstract class RecentlyPlayedState extends Equatable {
   @override

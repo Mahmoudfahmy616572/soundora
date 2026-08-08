@@ -1,14 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
+﻿import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/data/models/songs/songs_model.dart';
-import 'package:spotify/data/sources/deezer/models/deezer_track_model.dart';
-import 'package:spotify/data/sources/models/combined_artist_model.dart';
-import 'package:spotify/domain/usecase/songs/get_artist_details_usecase.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/song_player_cubit.dart';
-import 'package:spotify/serviece_locator.dart';
+import 'package:soundora/data/models/songs/songs_model.dart';
+import 'package:soundora/data/sources/deezer/models/deezer_track_model.dart';
+import 'package:soundora/data/sources/models/combined_artist_model.dart';
+import 'package:soundora/domain/usecase/songs/get_artist_details_usecase.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/song_player_cubit.dart';
+import 'package:soundora/serviece_locator.dart';
 
 class ArtistHubPage extends StatefulWidget {
   final String artistName;

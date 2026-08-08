@@ -1,13 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
+﻿import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/common/appbar/basic_appbar.dart';
-import 'package:spotify/core/config/theme/app_colors.dart';
-import 'package:spotify/core/widgets/shimmer_widgets.dart';
-import 'package:spotify/presentation/LyricsMemory/cubit/lyrics_memory_cubit.dart';
-import 'package:spotify/presentation/LyricsMemory/cubit/lyrics_memory_state.dart';
-import 'package:spotify/presentation/LyricsMemory/models/lyrics_memory_model.dart';
+import 'package:soundora/common/appbar/basic_appbar.dart';
+import 'package:soundora/core/config/theme/app_colors.dart';
+import 'package:soundora/core/widgets/shimmer_widgets.dart';
+import 'package:soundora/presentation/LyricsMemory/cubit/lyrics_memory_cubit.dart';
+import 'package:soundora/presentation/LyricsMemory/cubit/lyrics_memory_state.dart';
+import 'package:soundora/presentation/LyricsMemory/models/lyrics_memory_model.dart';
 
 class LyricsMemoryPage extends StatelessWidget {
   const LyricsMemoryPage({super.key});

@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/core/config/theme/app_colors.dart';
+import 'package:soundora/core/config/theme/app_colors.dart';
 
 class AppTheme {
   static final lightTheme = ThemeData(
     brightness: Brightness.light,
     fontFamily: "Satoshi",
+    fontFamilyFallback: const ["Cairo"],
     primaryColor: AppColors.primaryColor,
     scaffoldBackgroundColor: AppColors.backgroundLightTheme,
     inputDecorationTheme: InputDecorationTheme(
@@ -59,6 +60,7 @@ class AppTheme {
   static final darkTheme = ThemeData(
     brightness: Brightness.dark,
     fontFamily: "Satoshi",
+    fontFamilyFallback: const ["Cairo"],
     primaryColor: AppColors.primaryColor,
     scaffoldBackgroundColor: AppColors.backgroundDarkTheme,
     inputDecorationTheme: InputDecorationTheme(

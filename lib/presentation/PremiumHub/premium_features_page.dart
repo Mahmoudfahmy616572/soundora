@@ -1,21 +1,23 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/common/appbar/basic_appbar.dart';
-import 'package:spotify/presentation/Gamification/achievements_page.dart';
-import 'package:spotify/presentation/Gamification/cubit/achievement_cubit.dart';
-import 'package:spotify/presentation/KaraokeMode/karaoke_page.dart';
-import 'package:spotify/presentation/ListeningParty/cubit/listening_party_cubit.dart';
-import 'package:spotify/presentation/ListeningParty/listening_party_page.dart';
-import 'package:spotify/presentation/LyricsMemory/lyrics_memory_page.dart';
-import 'package:spotify/presentation/MoodMap/cubit/mood_map_cubit.dart';
-import 'package:spotify/presentation/MoodMap/mood_map_page.dart';
-import 'package:spotify/presentation/MusicCard/music_card_page.dart';
-import 'package:spotify/presentation/SmartDJ/cubit/smart_dj_cubit.dart';
-import 'package:spotify/presentation/SmartDJ/smart_dj_page.dart';
-import 'package:spotify/presentation/SpatialAudio/spatial_audio_page.dart';
-import 'package:spotify/presentation/TimeMachine/cubit/time_machine_cubit.dart';
-import 'package:spotify/presentation/TimeMachine/time_machine_page.dart';
+import 'package:get_it/get_it.dart';
+import 'package:soundora/common/appbar/basic_appbar.dart';import 'package:soundora/presentation/Gamification/achievements_page.dart';
+import 'package:soundora/presentation/Gamification/cubit/achievement_cubit.dart';
+import 'package:soundora/presentation/KaraokeMode/karaoke_page.dart';
+import 'package:soundora/presentation/ListeningParty/cubit/listening_party_cubit.dart';
+import 'package:soundora/presentation/ListeningParty/listening_party_page.dart';
+import 'package:soundora/presentation/LyricsMemory/lyrics_memory_page.dart';
+import 'package:soundora/presentation/MoodMap/cubit/mood_map_cubit.dart';
+import 'package:soundora/presentation/MoodMap/mood_map_page.dart';
+import 'package:soundora/presentation/MusicCard/music_card_page.dart';
+import 'package:soundora/presentation/Quran/cubit/quran_cubit.dart';
+import 'package:soundora/presentation/Quran/quran_page.dart';
+import 'package:soundora/presentation/SmartDJ/cubit/smart_dj_cubit.dart';
+import 'package:soundora/presentation/SmartDJ/smart_dj_page.dart';
+import 'package:soundora/presentation/SpatialAudio/spatial_audio_page.dart';
+import 'package:soundora/presentation/TimeMachine/cubit/time_machine_cubit.dart';
+import 'package:soundora/presentation/TimeMachine/time_machine_page.dart';
 
 class PremiumFeaturesPage extends StatelessWidget {
   const PremiumFeaturesPage({super.key});
@@ -41,7 +43,7 @@ class PremiumFeaturesPage extends StatelessWidget {
           children: [
             SizedBox(height: 16.h),
             Text(
-              'Premium Features',
+              'Soundora Experiences',
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w600,
@@ -50,7 +52,7 @@ class PremiumFeaturesPage extends StatelessWidget {
             ),
             SizedBox(height: 4.h),
             Text(
-              'Enhance your music experience',
+              'Tools that understand your music and make it yours',
               style: TextStyle(
                 fontSize: 14.sp,
                 color: Colors.white54,
@@ -210,7 +212,7 @@ final _features = [
     icon: Icons.emoji_events,
     color: const Color(0xFFFFD93D),
     pageBuilder: (_) => BlocProvider(
-      create: (_) => AchievementCubit()..loadAchievements(),
+      create: (_) => GetIt.instance<AchievementCubit>()..loadAchievements(),
       child: const AchievementsPage(),
     ),
   ),
@@ -234,5 +236,15 @@ final _features = [
     icon: Icons.surround_sound,
     color: const Color(0xFF00B894),
     pageBuilder: (_) => const SpatialAudioPage(),
+  ),
+  _FeatureItem(
+    title: 'Quran',
+    description: 'المصحف · ترتيل وتلاوة',
+    icon: Icons.menu_book,
+    color: const Color(0xFF4CAF50),
+    pageBuilder: (_) => BlocProvider(
+      create: (_) => QuranCubit(),
+      child: const QuranPage(),
+    ),
   ),
 ];

@@ -1,4 +1,4 @@
-package com.example.spotify
+﻿package com.soundora.app
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine

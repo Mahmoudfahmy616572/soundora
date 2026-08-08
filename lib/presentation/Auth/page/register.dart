@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:spotify/common/appbar/basic_appbar.dart';
-import 'package:spotify/common/widget/basic_elevatedbutton.dart';
-import 'package:spotify/core/config/assets/app_vectors.dart';
-import 'package:spotify/domain/usecase/auth/sighnup_usecase.dart';
-import 'package:spotify/presentation/Auth/cubit/otp_cubit.dart';
-import 'package:spotify/presentation/Auth/page/otp_verification_page.dart';
+import 'package:soundora/common/appbar/basic_appbar.dart';
+import 'package:soundora/common/widget/basic_elevatedbutton.dart';
+import 'package:soundora/core/config/assets/app_vectors.dart';
+import 'package:soundora/domain/usecase/auth/sighnup_usecase.dart';
+import 'package:soundora/presentation/Auth/cubit/otp_cubit.dart';
+import 'package:soundora/presentation/Auth/page/otp_verification_page.dart';
 
 import '../../../data/models/auth/create_user_req.dart';
 import '../../../serviece_locator.dart';

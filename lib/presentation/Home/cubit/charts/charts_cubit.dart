@@ -1,7 +1,7 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spotify/domain/usecase/songs/get_charts_usecase.dart';
-import 'package:spotify/presentation/Home/cubit/charts/charts_state.dart';
-import 'package:spotify/serviece_locator.dart';
+﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:soundora/domain/usecase/songs/get_charts_usecase.dart';
+import 'package:soundora/presentation/Home/cubit/charts/charts_state.dart';
+import 'package:soundora/serviece_locator.dart';
 
 class ChartsCubit extends Cubit<ChartsState> {
   final GetChartsUsecase _getChartsUsecase;

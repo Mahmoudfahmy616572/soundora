@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
+﻿import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/core/widgets/shimmer_widgets.dart';
-import 'package:spotify/data/sources/deezer/deezer_data_source.dart';
-import 'package:spotify/presentation/ArtistPage/artist_page.dart';
-import 'package:spotify/serviece_locator.dart';
+import 'package:soundora/core/widgets/shimmer_widgets.dart';
+import 'package:soundora/data/sources/deezer/deezer_data_source.dart';
+import 'package:soundora/presentation/ArtistPage/artist_page.dart';
+import 'package:soundora/serviece_locator.dart';
 
 class HomeArtistsWidget extends StatefulWidget {
   const HomeArtistsWidget({super.key});

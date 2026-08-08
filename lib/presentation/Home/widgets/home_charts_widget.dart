@@ -1,14 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
+﻿import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/core/config/theme/app_colors.dart';
-import 'package:spotify/core/widgets/shimmer_widgets.dart';
-import 'package:spotify/data/models/songs/songs_model.dart';
-import 'package:spotify/presentation/Home/cubit/charts/charts_cubit.dart';
-import 'package:spotify/presentation/Home/cubit/charts/charts_state.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/song_player_cubit.dart';
-import 'package:spotify/presentation/songsPlayPage/songs_play_page.dart';
+import 'package:soundora/core/config/theme/app_colors.dart';
+import 'package:soundora/core/widgets/shimmer_widgets.dart';
+import 'package:soundora/data/models/songs/songs_model.dart';
+import 'package:soundora/presentation/Home/cubit/charts/charts_cubit.dart';
+import 'package:soundora/presentation/Home/cubit/charts/charts_state.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/song_player_cubit.dart';
+import 'package:soundora/presentation/songsPlayPage/songs_play_page.dart';
 
 class HomeChartsWidget extends StatefulWidget {
   const HomeChartsWidget({super.key});

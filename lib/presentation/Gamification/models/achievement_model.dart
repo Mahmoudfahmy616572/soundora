@@ -55,14 +55,6 @@ class AchievementModel {
         xpReward: 50,
       ),
       AchievementModel(
-        id: 'genre_explorer',
-        title: 'Genre Explorer',
-        description: 'Listen to songs from 10+ different genres',
-        icon: '🌍',
-        requiredValue: 10,
-        xpReward: 200,
-      ),
-      AchievementModel(
         id: 'night_owl',
         title: 'Night Owl',
         description: 'Listen after midnight 10 times',
@@ -79,14 +71,6 @@ class AchievementModel {
         xpReward: 300,
       ),
       AchievementModel(
-        id: 'playlist_master',
-        title: 'Playlist Master',
-        description: 'Create 50 playlists',
-        icon: '📋',
-        requiredValue: 50,
-        xpReward: 250,
-      ),
-      AchievementModel(
         id: 'discovery_king',
         title: 'Discovery King',
         description: 'Discover 100 new songs',
@@ -101,6 +85,22 @@ class AchievementModel {
         icon: '🔥',
         requiredValue: 7,
         xpReward: 200,
+      ),
+      AchievementModel(
+        id: 'curator',
+        title: 'Curator',
+        description: 'Save 20 songs to your library',
+        icon: '📚',
+        requiredValue: 20,
+        xpReward: 250,
+      ),
+      AchievementModel(
+        id: 'party_host',
+        title: 'Party Host',
+        description: 'Host your first listening party',
+        icon: '🎉',
+        requiredValue: 1,
+        xpReward: 150,
       ),
     ];
   }

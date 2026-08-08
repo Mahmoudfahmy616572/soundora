@@ -1,6 +1,11 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
+/// Runs a fresh detector inside a background isolate (the class is stateless).
+MaqamResult? detectMaqamOnBackground(Float64List samples, int sourceSampleRate) {
+  return MaqamDetector().detect(samples, sourceSampleRate);
+}
+
 class MaqamResult {
   final String arabicName;
   final String englishName;

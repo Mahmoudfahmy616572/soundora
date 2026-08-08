@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/core/config/theme/app_colors.dart';
-import 'package:spotify/core/widgets/music_loading_widget.dart';
-import 'package:spotify/presentation/Gamification/cubit/achievement_cubit.dart';
-import 'package:spotify/presentation/Gamification/cubit/achievement_state.dart';
+import 'package:soundora/core/config/theme/app_colors.dart';
+import 'package:soundora/core/widgets/music_loading_widget.dart';
+import 'package:soundora/presentation/Gamification/cubit/achievement_cubit.dart';
+import 'package:soundora/presentation/Gamification/cubit/achievement_state.dart';
 
 class AchievementsPage extends StatefulWidget {
   const AchievementsPage({super.key});
@@ -98,29 +98,6 @@ class _AchievementsPageState extends State<AchievementsPage> {
             },
           ),
           SizedBox(height: 20.h),
-          SizedBox(
-            width: double.infinity,
-            height: 50.h,
-            child: ElevatedButton(
-              onPressed: () {
-                context.read<AchievementCubit>().simulateRandomProgress();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25.r),
-                ),
-              ),
-              child: Text(
-                'Simulate Progress',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );

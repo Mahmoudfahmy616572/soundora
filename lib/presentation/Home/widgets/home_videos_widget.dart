@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/core/config/theme/app_colors.dart';
-import 'package:spotify/core/widgets/shimmer_widgets.dart';
-import 'package:spotify/serviece_locator.dart';
-import 'package:spotify/data/sources/audiodb/audiodb_data_source.dart';
-import 'package:spotify/data/sources/audiodb/models/audiodb_video_model.dart';
+import 'package:soundora/core/config/theme/app_colors.dart';
+import 'package:soundora/core/widgets/shimmer_widgets.dart';
+import 'package:soundora/serviece_locator.dart';
+import 'package:soundora/data/sources/audiodb/audiodb_data_source.dart';
+import 'package:soundora/data/sources/audiodb/models/audiodb_video_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeVideosWidget extends StatefulWidget {

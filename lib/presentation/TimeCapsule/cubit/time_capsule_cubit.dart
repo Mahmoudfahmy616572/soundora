@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
-import 'package:spotify/data/sources/listening_history/listening_data_source.dart';
+﻿import 'package:bloc/bloc.dart';
+import 'package:soundora/data/sources/listening_history/listening_data_source.dart';
 
 class TimeCapsuleState {
   final bool isLoading;

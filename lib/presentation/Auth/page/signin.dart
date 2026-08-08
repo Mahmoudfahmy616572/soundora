@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:spotify/common/appbar/basic_appbar.dart';
-import 'package:spotify/core/config/assets/app_vectors.dart';
-import 'package:spotify/presentation/Auth/page/forgot_password_page.dart';
-import 'package:spotify/presentation/MainWrapper/main_wrapper.dart';
+import 'package:soundora/common/appbar/basic_appbar.dart';
+import 'package:soundora/core/config/assets/app_vectors.dart';
+import 'package:soundora/presentation/Auth/page/forgot_password_page.dart';
+import 'package:soundora/presentation/MainWrapper/main_wrapper.dart';
 
 import '../../../common/widget/basic_elevatedbutton.dart';
 import '../../../data/models/auth/signin_req.dart';

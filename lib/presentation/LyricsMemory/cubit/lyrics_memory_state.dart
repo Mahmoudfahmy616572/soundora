@@ -1,5 +1,5 @@
-import 'package:equatable/equatable.dart';
-import 'package:spotify/presentation/LyricsMemory/models/lyrics_memory_model.dart';
+﻿import 'package:equatable/equatable.dart';
+import 'package:soundora/presentation/LyricsMemory/models/lyrics_memory_model.dart';
 
 abstract class LyricsMemoryState extends Equatable {
   @override

@@ -1,5 +1,5 @@
-import 'package:equatable/equatable.dart';
-import 'package:spotify/presentation/LyricsEmotion/models/lyric_emotion_model.dart';
+﻿import 'package:equatable/equatable.dart';
+import 'package:soundora/presentation/LyricsEmotion/models/lyric_emotion_model.dart';
 
 abstract class LyricsEmotionState extends Equatable {
   @override

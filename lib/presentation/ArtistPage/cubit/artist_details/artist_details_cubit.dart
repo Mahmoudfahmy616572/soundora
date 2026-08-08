@@ -1,7 +1,7 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spotify/domain/usecase/songs/get_artist_details_usecase.dart';
-import 'package:spotify/presentation/ArtistPage/cubit/artist_details/artist_details_state.dart';
-import 'package:spotify/serviece_locator.dart';
+﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:soundora/domain/usecase/songs/get_artist_details_usecase.dart';
+import 'package:soundora/presentation/ArtistPage/cubit/artist_details/artist_details_state.dart';
+import 'package:soundora/serviece_locator.dart';
 
 class ArtistDetailsCubit extends Cubit<ArtistDetailsState> {
   ArtistDetailsCubit() : super(ArtistDetailsInitial());

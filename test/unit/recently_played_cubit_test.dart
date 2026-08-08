@@ -1,9 +1,9 @@
-import 'dart:io';
+﻿import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:spotify/presentation/Home/cubit/recently_played/recently_played_cubit.dart';
-import 'package:spotify/presentation/Home/cubit/recently_played/recently_played_state.dart';
+import 'package:soundora/presentation/Home/cubit/recently_played/recently_played_cubit.dart';
+import 'package:soundora/presentation/Home/cubit/recently_played/recently_played_state.dart';
 
 void main() {
   setUpAll(() async {

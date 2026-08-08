@@ -1,27 +1,28 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:spotify/common/appbar/basic_appbar.dart';
-import 'package:spotify/core/config/assets/app_vectors.dart';
-import 'package:spotify/presentation/Home/cubit/charts/charts_cubit.dart';
-import 'package:spotify/presentation/Home/cubit/charts/charts_state.dart';
-import 'package:spotify/presentation/Home/cubit/recently_played/recently_played_cubit.dart';
-import 'package:spotify/presentation/Home/cubit/recently_played/recently_played_state.dart';
-import 'package:spotify/presentation/Home/cubit/smart_home/smart_home_cubit.dart';
-import 'package:spotify/presentation/Home/widgets/browse_categories_widget.dart';
-import 'package:spotify/presentation/Home/widgets/continue_listening_widget.dart';
-import 'package:spotify/presentation/Home/widgets/for_you_widget.dart';
-import 'package:spotify/presentation/Home/widgets/hero_section.dart';
-import 'package:spotify/presentation/Home/widgets/home_charts_widget.dart';
-import 'package:spotify/presentation/Home/widgets/mood_activity_widget.dart';
-import 'package:spotify/presentation/Home/widgets/new_releases_widget.dart';
-import 'package:spotify/presentation/Home/widgets/podcasts_section_widget.dart';
-import 'package:spotify/presentation/Home/widgets/trending_now_widget.dart';
-import 'package:spotify/presentation/Home/widgets/your_artists_section.dart';
-import 'package:spotify/presentation/Profile/profile_page.dart';
-import 'package:spotify/presentation/TasteProfile/cubit/taste_profile_cubit.dart';
-import 'package:spotify/serviece_locator.dart';
+import 'package:soundora/common/appbar/basic_appbar.dart';
+import 'package:soundora/core/config/assets/app_vectors.dart';
+import 'package:soundora/presentation/Home/cubit/charts/charts_cubit.dart';
+import 'package:soundora/presentation/Home/cubit/charts/charts_state.dart';
+import 'package:soundora/presentation/Home/cubit/recently_played/recently_played_cubit.dart';
+import 'package:soundora/presentation/Home/cubit/recently_played/recently_played_state.dart';
+import 'package:soundora/presentation/Home/cubit/smart_home/smart_home_cubit.dart';
+import 'package:soundora/presentation/Home/widgets/browse_categories_widget.dart';
+import 'package:soundora/presentation/Home/widgets/continue_listening_widget.dart';
+import 'package:soundora/presentation/Home/widgets/for_you_widget.dart';
+import 'package:soundora/presentation/Home/widgets/hero_section.dart';
+import 'package:soundora/presentation/Home/widgets/home_charts_widget.dart';
+import 'package:soundora/presentation/Home/widgets/maqam_discover_widget.dart';
+import 'package:soundora/presentation/Home/widgets/mood_activity_widget.dart';
+import 'package:soundora/presentation/Home/widgets/new_releases_widget.dart';
+import 'package:soundora/presentation/Home/widgets/podcasts_section_widget.dart';
+import 'package:soundora/presentation/Home/widgets/trending_now_widget.dart';
+import 'package:soundora/presentation/Home/widgets/your_artists_section.dart';
+import 'package:soundora/presentation/Profile/profile_page.dart';
+import 'package:soundora/presentation/TasteProfile/cubit/taste_profile_cubit.dart';
+import 'package:soundora/serviece_locator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -93,6 +94,8 @@ class _HomePageState extends State<HomePage> {
             children: [
               SizedBox(height: 8.h),
               const HeroSection(),
+              SizedBox(height: 16.h),
+              const MaqamDiscoverWidget(),
               SizedBox(height: 24.h),
               const ContinueListeningWidget(),
               SizedBox(height: 24.h),

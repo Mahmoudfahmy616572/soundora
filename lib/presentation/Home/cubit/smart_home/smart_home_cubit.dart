@@ -1,9 +1,9 @@
-import 'package:bloc/bloc.dart';
+﻿import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:spotify/data/models/songs/songs_model.dart';
-import 'package:spotify/data/models/taste_profile/taste_profile.dart';
-import 'package:spotify/data/sources/listening_history/listening_data_source.dart';
-import 'package:spotify/presentation/TasteProfile/cubit/taste_profile_cubit.dart';
+import 'package:soundora/data/models/songs/songs_model.dart';
+import 'package:soundora/data/models/taste_profile/taste_profile.dart';
+import 'package:soundora/data/sources/listening_history/listening_data_source.dart';
+import 'package:soundora/presentation/TasteProfile/cubit/taste_profile_cubit.dart';
 
 part 'smart_home_state.dart';
 

@@ -1,5 +1,5 @@
-import 'package:dio/dio.dart';
-import 'package:spotify/data/models/songs/songs_model.dart';
+﻿import 'package:dio/dio.dart';
+import 'package:soundora/data/models/songs/songs_model.dart';
 
 import 'models/deezer_track_model.dart';
 

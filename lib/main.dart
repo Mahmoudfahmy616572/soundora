@@ -1,3 +1,5 @@
+﻿import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,17 +8,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:spotify/core/config/theme/app_theme.dart';
-import 'package:spotify/presentation/DownloadedSongs/cubit/download_songs_for_offline_cubit.dart';
-import 'package:spotify/presentation/Home/cubit/recently_played/recently_played_cubit.dart';
-import 'package:spotify/presentation/LyricsEmotion/cubit/lyrics_emotion_cubit.dart';
-import 'package:spotify/presentation/MainWrapper/cubit/cubit/navigation_cubit.dart';
-import 'package:spotify/presentation/SearchPage/cubit/cubit/search_songs_cubit.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/lyrics/lyrics_cubit.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/music_canvas/music_canvas_cubit.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/song_player_cubit.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/sound_dna/sound_dna_cubit.dart';
-import 'package:spotify/presentation/TasteProfile/cubit/taste_profile_cubit.dart';
+import 'package:soundora/core/config/theme/app_theme.dart';
+import 'package:soundora/core/services/offline_downloads.dart';
+import 'package:soundora/core/services/resolved_url_cache.dart';
+import 'package:soundora/core/services/sync_offset_cache.dart';
+import 'package:soundora/data/sources/lyrics/lyrics_data_source.dart';
+import 'package:soundora/presentation/DownloadedSongs/cubit/download_songs_for_offline_cubit.dart';
+import 'package:soundora/presentation/Home/cubit/recently_played/recently_played_cubit.dart';
+import 'package:soundora/presentation/LyricsEmotion/cubit/lyrics_emotion_cubit.dart';
+import 'package:soundora/presentation/MainWrapper/cubit/cubit/navigation_cubit.dart';
+import 'package:soundora/presentation/SearchPage/cubit/cubit/search_songs_cubit.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/lyrics/lyrics_cubit.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/music_canvas/music_canvas_cubit.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/song_player_cubit.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/sound_dna/sound_dna_cubit.dart';
+import 'package:soundora/presentation/TasteProfile/cubit/taste_profile_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'presentation/LikedSongs/cubit/favourite_songs_cubit.dart'
@@ -47,6 +53,11 @@ Future<void> main() async {
   await Hive.openBox('skip_records');
   await Hive.openBox('listen_stats');
   await Hive.openBox('taste_profile');
+  await Hive.openBox('achievements');
+
+  // Best-effort housekeeping: expire old caches and migrate legacy downloads
+  // without blocking the first frame.
+  unawaited(_pruneAppCaches());
 
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: kIsWeb
@@ -60,6 +71,15 @@ Future<void> main() async {
 
   await intializedDependences();
   runApp(const MyApp());
+}
+
+/// Bounded cache cleanup + one-time migration, run in the background at launch.
+Future<void> _pruneAppCaches() async {
+  await ResolvedUrlCache.instance.purgeExpired();
+  await SyncOffsetCache().purge();
+  await LyricsDataSourceImpl.pruneCache();
+  await OfflineDownloads.sweepExpired();
+  await DownloadSongsForOfflineCubit.migrateLegacyDownloads();
 }
 
 class MyApp extends StatelessWidget {

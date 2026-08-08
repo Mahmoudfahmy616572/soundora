@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
-import 'package:spotify/data/models/songs/songs_model.dart';
-import 'package:spotify/data/sources/deezer/deezer_data_source.dart';
+﻿import 'package:bloc/bloc.dart';
+import 'package:soundora/data/models/songs/songs_model.dart';
+import 'package:soundora/data/sources/deezer/deezer_data_source.dart';
 
 import 'mood_map_state.dart';
 

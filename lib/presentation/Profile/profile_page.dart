@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
-import 'package:spotify/presentation/Auth/page/signin.dart';
-import 'package:spotify/presentation/LikedSongs/cubit/favourite_songs_cubit.dart';
-import 'package:spotify/presentation/LikedSongs/cubit/favourite_songs_state.dart';
+import 'package:soundora/presentation/Auth/page/signin.dart';
+import 'package:soundora/presentation/LikedSongs/cubit/favourite_songs_cubit.dart';
+import 'package:soundora/presentation/LikedSongs/cubit/favourite_songs_state.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfilePage extends StatelessWidget {

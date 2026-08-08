@@ -1,8 +1,8 @@
-import 'package:bloc/bloc.dart';
-import 'package:spotify/data/models/songs/songs_model.dart';
-import 'package:spotify/data/sources/listening_history/listening_data_source.dart';
-import 'package:spotify/domain/usecase/songs/search_songs_usecase.dart';
-import 'package:spotify/serviece_locator.dart';
+﻿import 'package:bloc/bloc.dart';
+import 'package:soundora/data/models/songs/songs_model.dart';
+import 'package:soundora/data/sources/listening_history/listening_data_source.dart';
+import 'package:soundora/domain/usecase/songs/search_songs_usecase.dart';
+import 'package:soundora/serviece_locator.dart';
 
 import 'search_songs_state.dart';
 

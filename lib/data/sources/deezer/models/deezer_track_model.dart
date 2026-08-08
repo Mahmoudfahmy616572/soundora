@@ -1,4 +1,4 @@
-import 'package:spotify/data/models/songs/songs_model.dart';
+﻿import 'package:soundora/data/models/songs/songs_model.dart';
 
 class DeezerTrackModel {
   final int id;

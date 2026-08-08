@@ -1,8 +1,8 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:hive/hive.dart';
-import 'package:spotify/presentation/LyricsMemory/models/lyrics_memory_model.dart';
+import 'package:soundora/presentation/LyricsMemory/models/lyrics_memory_model.dart';
 
 import 'lyrics_memory_state.dart';
 

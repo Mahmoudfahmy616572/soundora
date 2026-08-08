@@ -1,6 +1,6 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:spotify/data/sources/lyrics/lyrics_data_source.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/lyrics/lyrics_state.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:soundora/data/sources/lyrics/lyrics_data_source.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/lyrics/lyrics_state.dart';
 
 void main() {
   group('LyricsState', () {
@@ -35,6 +35,17 @@ void main() {
       final a = LyricsLoaded([LyricLine('X', Duration(seconds: 0))]);
       final b = LyricsLoaded([LyricLine('X', Duration(seconds: 0))]);
       expect(a, equals(b));
+    });
+
+    test('LyricsLoaded.exactMatch reflects line provenance', () {
+      final exact = LyricsLoaded(
+          [LyricLine('X', Duration.zero, exactMatch: true)]);
+      expect(exact.exactMatch, isTrue);
+
+      final matched = LyricsLoaded([LyricLine('X', Duration.zero)]);
+      expect(matched.exactMatch, isFalse);
+
+      expect(LyricsLoaded(<LyricLine>[]).exactMatch, isFalse);
     });
 
     test('LyricsLoaded different lengths not equal', () {

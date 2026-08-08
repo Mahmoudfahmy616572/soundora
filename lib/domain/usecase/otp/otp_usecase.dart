@@ -1,7 +1,7 @@
-import 'package:dartz/dartz.dart';
-import 'package:spotify/domain/repositories/otp/otp_repo.dart';
-import 'package:spotify/domain/usecase/usecase.dart';
-import 'package:spotify/serviece_locator.dart';
+﻿import 'package:dartz/dartz.dart';
+import 'package:soundora/domain/repositories/otp/otp_repo.dart';
+import 'package:soundora/domain/usecase/usecase.dart';
+import 'package:soundora/serviece_locator.dart';
 
 class SendOtpUsecase implements Usecase<Either, String> {
   @override

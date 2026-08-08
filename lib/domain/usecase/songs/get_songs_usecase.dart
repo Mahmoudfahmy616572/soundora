@@ -1,6 +1,6 @@
-import 'package:dartz/dartz.dart';
-import 'package:spotify/domain/usecase/usecase.dart';
-import 'package:spotify/serviece_locator.dart';
+﻿import 'package:dartz/dartz.dart';
+import 'package:soundora/domain/usecase/usecase.dart';
+import 'package:soundora/serviece_locator.dart';
 
 import '../../../data/sources/songs/get_songs_supabase_servieces.dart';
 

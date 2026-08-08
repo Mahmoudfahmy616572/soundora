@@ -1,5 +1,5 @@
-import 'package:equatable/equatable.dart';
-import 'package:spotify/presentation/Gamification/models/achievement_model.dart';
+﻿import 'package:equatable/equatable.dart';
+import 'package:soundora/presentation/Gamification/models/achievement_model.dart';
 
 abstract class AchievementState extends Equatable {
   @override

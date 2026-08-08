@@ -1,8 +1,8 @@
-import 'dart:math' show Random, sin, cos, min;
+﻿import 'dart:math' show Random, sin, cos, min;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/core/config/theme/app_colors.dart';
+import 'package:soundora/core/config/theme/app_colors.dart';
 
 enum VisualizerMode { bars, wave, circular }
 

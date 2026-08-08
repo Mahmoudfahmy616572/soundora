@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/data/sources/listening_history/listening_data_source.dart';
-import 'package:spotify/presentation/TimeCapsule/cubit/time_capsule_cubit.dart';
+import 'package:soundora/data/sources/listening_history/listening_data_source.dart';
+import 'package:soundora/presentation/TimeCapsule/cubit/time_capsule_cubit.dart';
 
 class TimeCapsuleSheet extends StatefulWidget {
   const TimeCapsuleSheet({super.key});
@@ -53,7 +53,7 @@ class _TimeCapsuleSheetState extends State<TimeCapsuleSheet> {
                 SizedBox(height: 20.h),
                 Center(
                   child: Text(
-                    '🕰️ كبسولة زمنية',
+                    'ðŸ•°ï¸ ÙƒØ¨Ø³ÙˆÙ„Ø© Ø²Ù…Ù†ÙŠØ©',
                     style: TextStyle(
                       fontSize: 22.sp,
                       fontWeight: FontWeight.w800,
@@ -65,7 +65,7 @@ class _TimeCapsuleSheetState extends State<TimeCapsuleSheet> {
                 SizedBox(height: 4.h),
                 Center(
                   child: Text(
-                    'في مثل هذا اليوم',
+                    'ÙÙŠ Ù…Ø«Ù„ Ù‡Ø°Ø§ Ø§Ù„ÙŠÙˆÙ…',
                     style: TextStyle(
                       fontSize: 13.sp,
                       color: Colors.white.withOpacity(0.5),
@@ -76,7 +76,7 @@ class _TimeCapsuleSheetState extends State<TimeCapsuleSheet> {
                 SizedBox(height: 24.h),
 
                 if (lastYear.isNotEmpty) ...[
-                  _SectionLabel('الذكرى الأثمن — قبل عام'),
+                  _SectionLabel('Ø§Ù„Ø°ÙƒØ±Ù‰ Ø§Ù„Ø£Ø«Ù…Ù† â€” Ù‚Ø¨Ù„ Ø¹Ø§Ù…'),
                   SizedBox(height: 12.h),
                   ...lastYear.take(3).map(
                         (e) => _MemoryTile(event: e, gold: _gold),
@@ -86,7 +86,7 @@ class _TimeCapsuleSheetState extends State<TimeCapsuleSheet> {
 
                 if (memories.isNotEmpty) ...[
                   _SectionLabel(
-                    'اليوم — ${memories.length} استماع',
+                    'Ø§Ù„ÙŠÙˆÙ… â€” ${memories.length} Ø§Ø³ØªÙ…Ø§Ø¹',
                   ),
                   SizedBox(height: 12.h),
                   ...memories.take(4).map((e) => _MemoryTile(event: e, gold: _gold)),
@@ -99,7 +99,7 @@ class _TimeCapsuleSheetState extends State<TimeCapsuleSheet> {
                   SizedBox(height: 12.h),
                   Center(
                     child: Text(
-                      'لا توجد ذكريات بعد…\nابدأ بالاستماع وسنحفظ اللحظات لك.',
+                      'Ù„Ø§ ØªÙˆØ¬Ø¯ Ø°ÙƒØ±ÙŠØ§Øª Ø¨Ø¹Ø¯â€¦\nØ§Ø¨Ø¯Ø£ Ø¨Ø§Ù„Ø§Ø³ØªÙ…Ø§Ø¹ ÙˆØ³Ù†Ø­ÙØ¸ Ø§Ù„Ù„Ø­Ø¸Ø§Øª Ù„Ùƒ.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14.sp,
@@ -192,7 +192,7 @@ class _MemoryTile extends StatelessWidget {
                 ),
                 SizedBox(height: 3.h),
                 Text(
-                  '${event.artist}  •  ${event.timestamp.year}',
+                  '${event.artist}  â€¢  ${event.timestamp.year}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -206,8 +206,8 @@ class _MemoryTile extends StatelessWidget {
           ),
           Text(
             event.listenedDuration.inSeconds >= 60
-                ? '${event.listenedDuration.inMinutes} د'
-                : '${event.listenedDuration.inSeconds} ث',
+                ? '${event.listenedDuration.inMinutes} Ø¯'
+                : '${event.listenedDuration.inSeconds} Ø«',
             style: TextStyle(
               fontSize: 12.sp,
               color: gold.withOpacity(0.8),
@@ -252,7 +252,7 @@ class _YearSummaryCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'ملخص العام الماضي',
+            'Ù…Ù„Ø®Øµ Ø§Ù„Ø¹Ø§Ù… Ø§Ù„Ù…Ø§Ø¶ÙŠ',
             style: TextStyle(
               fontSize: 15.sp,
               fontWeight: FontWeight.w700,
@@ -264,9 +264,9 @@ class _YearSummaryCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _Stat(icon: Icons.calendar_month, value: '${days.length}', label: 'أيام'),
-              _Stat(icon: Icons.graphic_eq, value: '${days.values.reduce((a, b) => a + b)}', label: 'استماع'),
-              _Stat(icon: Icons.star, value: '${topDays.length}', label: 'أبرز لحظة'),
+              _Stat(icon: Icons.calendar_month, value: '${days.length}', label: 'Ø£ÙŠØ§Ù…'),
+              _Stat(icon: Icons.graphic_eq, value: '${days.values.reduce((a, b) => a + b)}', label: 'Ø§Ø³ØªÙ…Ø§Ø¹'),
+              _Stat(icon: Icons.star, value: '${topDays.length}', label: 'Ø£Ø¨Ø±Ø² Ù„Ø­Ø¸Ø©'),
             ],
           ),
           SizedBox(height: 14.h),
@@ -290,7 +290,7 @@ class _YearSummaryCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${e.value} استماع',
+                    '${e.value} Ø§Ø³ØªÙ…Ø§Ø¹',
                     style: TextStyle(
                       fontSize: 12.sp,
                       color: gold,

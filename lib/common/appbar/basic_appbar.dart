@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:spotify/common/backButton/back_button.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:soundora/common/backButton/back_button.dart';
 
 class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
   const BasicAppbar(

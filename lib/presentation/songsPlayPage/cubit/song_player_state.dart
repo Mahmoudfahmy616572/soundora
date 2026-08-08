@@ -1,6 +1,7 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import 'package:flutter/painting.dart';
-import 'package:spotify/data/models/songs/songs_model.dart';
+import 'package:soundora/core/services/lyric_alignment.dart';
+import 'package:soundora/data/models/songs/songs_model.dart';
 
 abstract class SongPlayerState extends Equatable {
   final int currentIndex;
@@ -36,14 +37,16 @@ class SongPlayerLoading extends SongPlayerState {
 class SongPlayerLoaded extends SongPlayerState {
   final bool isLyricsVisible;
   final bool showFullSongPopup;
+  final bool fullSongResolving;
   final bool isFullSong;
-  final Duration syncOffset;
+  final LyricAlignment? alignment;
 
   const SongPlayerLoaded({
     required this.isLyricsVisible,
     this.showFullSongPopup = false,
+    this.fullSongResolving = false,
     this.isFullSong = false,
-    this.syncOffset = Duration.zero,
+    this.alignment,
     super.currentIndex,
     super.playlist,
     super.isPlaying,
@@ -55,8 +58,9 @@ class SongPlayerLoaded extends SongPlayerState {
   SongPlayerLoaded copyWith({
     bool? isLyricsVisible,
     bool? showFullSongPopup,
+    bool? fullSongResolving,
     bool? isFullSong,
-    Duration? syncOffset,
+    LyricAlignment? alignment,
     int? currentIndex,
     List<SongModel>? playlist,
     bool? isPlaying,
@@ -67,8 +71,9 @@ class SongPlayerLoaded extends SongPlayerState {
     return SongPlayerLoaded(
       isLyricsVisible: isLyricsVisible ?? this.isLyricsVisible,
       showFullSongPopup: showFullSongPopup ?? this.showFullSongPopup,
+      fullSongResolving: fullSongResolving ?? this.fullSongResolving,
       isFullSong: isFullSong ?? this.isFullSong,
-      syncOffset: syncOffset ?? this.syncOffset,
+      alignment: alignment ?? this.alignment,
       currentIndex: currentIndex ?? this.currentIndex,
       playlist: playlist ?? this.playlist,
       isPlaying: isPlaying ?? this.isPlaying,
@@ -82,8 +87,9 @@ class SongPlayerLoaded extends SongPlayerState {
   List<Object?> get props => [
         isLyricsVisible,
         showFullSongPopup,
+        fullSongResolving,
         isFullSong,
-        syncOffset,
+        alignment,
         currentIndex,
         playlist.length,
         isPlaying,

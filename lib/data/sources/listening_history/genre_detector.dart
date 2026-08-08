@@ -1,5 +1,5 @@
-import 'package:spotify/data/sources/lastfm/lastfm_data_source.dart';
-import 'package:spotify/serviece_locator.dart';
+﻿import 'package:soundora/data/sources/lastfm/lastfm_data_source.dart';
+import 'package:soundora/serviece_locator.dart';
 
 class GenreDetector {
   final Map<String, List<String>> _cache = {};

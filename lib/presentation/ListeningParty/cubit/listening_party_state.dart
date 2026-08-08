@@ -1,5 +1,5 @@
-import 'package:equatable/equatable.dart';
-import 'package:spotify/data/models/songs/songs_model.dart';
+﻿import 'package:equatable/equatable.dart';
+import 'package:soundora/data/models/songs/songs_model.dart';
 
 class PartyParticipant extends Equatable {
   final String id;
@@ -11,6 +11,20 @@ class PartyParticipant extends Equatable {
     required this.name,
     this.isHost = false,
   });
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'isHost': isHost,
+      };
+
+  factory PartyParticipant.fromJson(Map<String, dynamic> json) {
+    return PartyParticipant(
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      isHost: json['isHost'] == true,
+    );
+  }
 
   @override
   List<Object?> get props => [id, name, isHost];

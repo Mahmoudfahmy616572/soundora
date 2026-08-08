@@ -1,12 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
+﻿import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/core/config/theme/app_colors.dart';
-import 'package:spotify/core/widgets/music_loading_widget.dart';
-import 'package:spotify/presentation/ListeningParty/cubit/listening_party_cubit.dart';
-import 'package:spotify/presentation/ListeningParty/cubit/listening_party_state.dart';
+import 'package:soundora/core/config/theme/app_colors.dart';
+import 'package:soundora/core/widgets/music_loading_widget.dart';
+import 'package:soundora/presentation/ListeningParty/cubit/listening_party_cubit.dart';
+import 'package:soundora/presentation/ListeningParty/cubit/listening_party_state.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/song_player_cubit.dart';
 
 class ListeningPartyPage extends StatefulWidget {
   const ListeningPartyPage({super.key});
@@ -24,6 +25,27 @@ class _ListeningPartyPageState extends State<ListeningPartyPage> {
     _nameController.dispose();
     _codeController.dispose();
     super.dispose();
+  }
+
+  /// Keeps the real audio player in sync with the party state, on every
+  /// device in the room, so everyone actually hears the same song.
+  void _syncWithPlayer(BuildContext context, ListeningPartyActive state) {
+    final player = context.read<SongPlayerCubit>();
+    final currentSong = state.currentSong;
+    if (currentSong == null) return;
+
+    final alreadyCurrent = player.playList.isNotEmpty &&
+        player.currentIndex < player.playList.length &&
+        player.playList[player.currentIndex].id.toString() ==
+            currentSong.id.toString();
+
+    if (!alreadyCurrent) {
+      player.loadSong(state.queue, state.currentIndex, currentSong.imageUrl);
+      return;
+    }
+    if (state.isPlaying != player.audioPlayer.playing) {
+      player.playOrpauseSong();
+    }
   }
 
   @override
@@ -58,6 +80,9 @@ class _ListeningPartyPageState extends State<ListeningPartyPage> {
                 backgroundColor: Colors.red[800],
               ),
             );
+          }
+          if (state is ListeningPartyActive) {
+            _syncWithPlayer(context, state);
           }
         },
         builder: (context, state) {
@@ -425,7 +450,7 @@ class _ListeningPartyPageState extends State<ListeningPartyPage> {
               ),
               SizedBox(width: 8.w),
               Text(
-                'LIVE  •  ${state.participants.length} listening',
+                'LIVE  â€¢  ${state.participants.length} listening',
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w600,

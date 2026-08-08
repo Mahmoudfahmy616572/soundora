@@ -1,5 +1,5 @@
-import 'package:equatable/equatable.dart';
-import 'package:spotify/data/sources/audd/models/audd_result_model.dart';
+﻿import 'package:equatable/equatable.dart';
+import 'package:soundora/data/sources/audd/models/audd_result_model.dart';
 
 sealed class IdentifySongState extends Equatable {
   @override

@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:spotify/presentation/chooseMode/bloc/theme_cubit.dart';
+import 'package:soundora/presentation/chooseMode/bloc/theme_cubit.dart';
 
 import '../../../common/widget/basic_elevatedbutton.dart';
 import '../../../common/widget/choose_mode_btn.dart';

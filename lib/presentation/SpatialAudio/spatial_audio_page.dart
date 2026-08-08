@@ -1,8 +1,12 @@
-import 'dart:math' show sin, cos;
+﻿import 'dart:math' show sin, cos;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/core/config/theme/app_colors.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:soundora/core/config/theme/app_colors.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/song_player_cubit.dart';
 
 class SpatialAudioPage extends StatefulWidget {
   const SpatialAudioPage({super.key});
@@ -20,10 +24,34 @@ class _SpatialAudioPageState extends State<SpatialAudioPage>
   late AnimationController _pulseController;
 
   final List<Map<String, dynamic>> _presets = [
-    {'name': 'Immersive', 'icon': Icons.surround_sound, 'description': 'Full 3D surround experience'},
-    {'name': 'Concert Hall', 'icon': Icons.stadium, 'description': 'Large venue reverb'},
-    {'name': 'Studio', 'icon': Icons.headphones, 'description': 'Clean studio monitoring'},
-    {'name': 'Intimate', 'icon': Icons.hearing, 'description': 'Close and personal sound'},
+    {
+      'name': 'Immersive',
+      'icon': Icons.surround_sound,
+      'description': 'Full volume, natural tempo',
+      'volume': 1.0,
+      'speed': 1.0,
+    },
+    {
+      'name': 'Concert Hall',
+      'icon': Icons.stadium,
+      'description': 'Slightly slower, deeper tone',
+      'volume': 1.0,
+      'speed': 0.95,
+    },
+    {
+      'name': 'Studio',
+      'icon': Icons.headphones,
+      'description': 'Clean monitoring, lower gain',
+      'volume': 0.85,
+      'speed': 1.0,
+    },
+    {
+      'name': 'Intimate',
+      'icon': Icons.hearing,
+      'description': 'Softer, brighter and closer',
+      'volume': 0.7,
+      'speed': 1.05,
+    },
   ];
 
   @override
@@ -37,6 +65,7 @@ class _SpatialAudioPageState extends State<SpatialAudioPage>
       vsync: this,
       duration: const Duration(milliseconds: 1200),
     )..repeat(reverse: true);
+    _restoreSettings();
   }
 
   @override
@@ -44,6 +73,43 @@ class _SpatialAudioPageState extends State<SpatialAudioPage>
     _rotateController.dispose();
     _pulseController.dispose();
     super.dispose();
+  }
+
+  /// Applies the chosen effect to the real audio player. Every preset maps to
+  /// an audible just_audio setting (volume gain + tempo), and the intensity
+  /// slider scales the gain, so toggling it genuinely changes the sound.
+  void _applyAudioSettings(AudioPlayer player) {
+    if (_spatialEnabled) {
+      final preset =
+          _presets.firstWhere((p) => p['name'] == _selectedPreset);
+      final baseVolume = (preset['volume'] as num).toDouble();
+      final baseSpeed = (preset['speed'] as num).toDouble();
+      player.setVolume(baseVolume * (0.5 + 0.5 * _intensity));
+      player.setSpeed(baseSpeed);
+    } else {
+      player.setVolume(1.0);
+      player.setSpeed(1.0);
+    }
+  }
+
+  Future<void> _saveSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('spatial_enabled', _spatialEnabled);
+    await prefs.setDouble('spatial_intensity', _intensity);
+    await prefs.setString('spatial_preset', _selectedPreset);
+  }
+
+  Future<void> _restoreSettings() async {
+    final player = context.read<SongPlayerCubit>().audioPlayer;
+    final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    _spatialEnabled = prefs.getBool('spatial_enabled') ?? false;
+    _intensity = prefs.getDouble('spatial_intensity') ?? 0.7;
+    final preset = prefs.getString('spatial_preset');
+    if (preset != null && _presets.any((p) => p['name'] == preset)) {
+      _selectedPreset = preset;
+    }
+    _applyAudioSettings(player);
   }
 
   @override
@@ -237,7 +303,12 @@ class _SpatialAudioPageState extends State<SpatialAudioPage>
           ),
           Switch(
             value: _spatialEnabled,
-            onChanged: (val) => setState(() => _spatialEnabled = val),
+            onChanged: (val) {
+              setState(() => _spatialEnabled = val);
+              _applyAudioSettings(
+                  context.read<SongPlayerCubit>().audioPlayer);
+              _saveSettings();
+            },
             activeColor: AppColors.primaryColor,
             activeTrackColor: AppColors.primaryColor.withOpacity(0.3),
           ),
@@ -289,7 +360,12 @@ class _SpatialAudioPageState extends State<SpatialAudioPage>
             child: Slider(
               value: _intensity,
               onChanged: _spatialEnabled
-                  ? (val) => setState(() => _intensity = val)
+                  ? (val) {
+                      setState(() => _intensity = val);
+                      _applyAudioSettings(
+                          context.read<SongPlayerCubit>().audioPlayer);
+                      _saveSettings();
+                    }
                   : null,
               min: 0.0,
               max: 1.0,
@@ -323,7 +399,11 @@ class _SpatialAudioPageState extends State<SpatialAudioPage>
         ...(_presets.map((preset) {
           final isSelected = _selectedPreset == preset['name'];
           return GestureDetector(
-            onTap: () => setState(() => _selectedPreset = preset['name']),
+            onTap: () {
+              setState(() => _selectedPreset = preset['name']);
+              _applyAudioSettings(context.read<SongPlayerCubit>().audioPlayer);
+              _saveSettings();
+            },
             child: Container(
               margin: EdgeInsets.only(bottom: 10.h),
               padding: EdgeInsets.all(14.w),

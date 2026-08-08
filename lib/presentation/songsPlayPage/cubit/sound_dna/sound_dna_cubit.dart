@@ -1,6 +1,6 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spotify/domain/usecase/songs/get_sound_dna_usecase.dart';
-import 'package:spotify/serviece_locator.dart';
+﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:soundora/domain/usecase/songs/get_sound_dna_usecase.dart';
+import 'package:soundora/serviece_locator.dart';
 
 import 'sound_dna_state.dart';
 

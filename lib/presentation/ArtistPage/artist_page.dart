@@ -1,12 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
+﻿import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/core/config/theme/app_colors.dart';
-import 'package:spotify/core/widgets/music_loading_widget.dart';
-import 'package:spotify/data/sources/models/combined_artist_model.dart';
-import 'package:spotify/presentation/ArtistPage/cubit/artist_details/artist_details_cubit.dart';
-import 'package:spotify/presentation/ArtistPage/cubit/artist_details/artist_details_state.dart';
+import 'package:soundora/core/config/theme/app_colors.dart';
+import 'package:soundora/core/widgets/music_loading_widget.dart';
+import 'package:soundora/data/sources/models/combined_artist_model.dart';
+import 'package:soundora/presentation/ArtistPage/cubit/artist_details/artist_details_cubit.dart';
+import 'package:soundora/presentation/ArtistPage/cubit/artist_details/artist_details_state.dart';
 
 class ArtistPage extends StatelessWidget {
   final String artistName;

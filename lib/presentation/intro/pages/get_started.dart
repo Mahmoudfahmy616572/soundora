@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:spotify/core/config/assets/app_vectors.dart';
-import 'package:spotify/core/config/theme/app_colors.dart';
+import 'package:soundora/core/config/assets/app_vectors.dart';
+import 'package:soundora/core/config/theme/app_colors.dart';
 
 import '../../../common/widget/basic_elevatedbutton.dart';
 import '../../Auth/page/signin_and_signup.dart';
@@ -33,7 +33,7 @@ class GetStarted extends StatelessWidget {
                 height: 25.h,
               ),
               Text(
-                "Discover millions of songs, create your own playlists, and share your music journey with Soundora.",
+                "Smart synced lyrics, karaoke mode, and a listening journey that truly understands your taste.",
                 style: TextStyle(
                     fontSize: 17.sp,
                     fontWeight: FontWeight.normal,

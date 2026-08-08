@@ -1,12 +1,12 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spotify/data/sources/lyrics/lyrics_data_source.dart';
-import 'package:spotify/presentation/LyricsEmotion/models/lyric_emotion_model.dart';
-import 'package:spotify/presentation/LyricsEmotion/cubit/lyrics_emotion_state.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/lyrics/lyrics_cubit.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/lyrics/lyrics_state.dart';
+import 'package:soundora/data/sources/lyrics/lyrics_data_source.dart';
+import 'package:soundora/presentation/LyricsEmotion/models/lyric_emotion_model.dart';
+import 'package:soundora/presentation/LyricsEmotion/cubit/lyrics_emotion_state.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/lyrics/lyrics_cubit.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/lyrics/lyrics_state.dart';
 
 class LyricsEmotionCubit extends Cubit<LyricsEmotionState> {
   final LyricsCubit _lyricsCubit;

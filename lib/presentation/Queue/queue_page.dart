@@ -1,11 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
+﻿import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/presentation/DownloadedSongs/cubit/download_songs_for_offline_cubit.dart';
-import 'package:spotify/presentation/DownloadedSongs/cubit/download_songs_for_offline_state.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/song_player_cubit.dart';
-import 'package:spotify/presentation/songsPlayPage/songs_play_page.dart';
+import 'package:soundora/core/services/offline_downloads.dart';
+import 'package:soundora/presentation/DownloadedSongs/cubit/download_songs_for_offline_cubit.dart';
+import 'package:soundora/presentation/DownloadedSongs/cubit/download_songs_for_offline_state.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/song_player_cubit.dart';
+import 'package:soundora/presentation/songsPlayPage/songs_play_page.dart';
 
 import 'cubit/queue_cubit.dart';
 import 'cubit/queue_state.dart';
@@ -115,7 +116,7 @@ class _QueuePageState extends State<QueuePage> {
                             return const SizedBox.shrink();
                           }
                           final isDownloaded =
-                              dlState.completedIds.contains(song.id);
+                              OfflineDownloads.syncPathOf(song.id) != null;
                           if (isDownloaded) {
                             return const Icon(Icons.download_done,
                                 color: Colors.green, size: 20);

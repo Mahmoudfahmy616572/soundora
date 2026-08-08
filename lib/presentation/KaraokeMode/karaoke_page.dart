@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:spotify/core/config/theme/app_colors.dart';
-import 'package:spotify/presentation/KaraokeMode/cubit/karaoke_cubit.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/lyrics/lyrics_cubit.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/lyrics/lyrics_state.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/song_player_cubit.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/song_player_state.dart';
+import 'package:soundora/core/config/theme/app_colors.dart';
+import 'package:soundora/presentation/KaraokeMode/cubit/karaoke_cubit.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/lyrics/lyrics_cubit.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/lyrics/lyrics_state.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/song_player_cubit.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/song_player_state.dart';
 
 class KaraokePage extends StatefulWidget {
   const KaraokePage({super.key});
@@ -104,6 +104,13 @@ class _KaraokePageState extends State<KaraokePage>
 
   Widget _buildKaraokeView(
       LyricsLoaded lyricsState, SongPlayerState playerState) {
+    final alignment = playerState is SongPlayerLoaded
+        ? playerState.alignment
+        : null;
+    _karaokeCubit.setAlignment(alignment);
+
+    Duration effectiveTime(Duration raw) =>
+        alignment?.effectiveTime(raw) ?? raw;
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -161,7 +168,7 @@ class _KaraokePageState extends State<KaraokePage>
                   final parsedLyrics = lyricsState.lyrics;
 
                   int activeIndex = parsedLyrics.lastIndexWhere(
-                      (line) => currentPosition >= line.startTime);
+                      (line) => currentPosition >= effectiveTime(line.startTime));
 
                   if (activeIndex != -1 &&
                       activeIndex != _currentLineIndex &&
@@ -187,7 +194,10 @@ class _KaraokePageState extends State<KaraokePage>
 
                       return GestureDetector(
                         onTap: _karaokeCubit.isRecording
-                            ? () => _karaokeCubit.onLineTapped(index)
+                            ? () => _karaokeCubit.onLineTapped(
+                                  index,
+                                  currentPosition,
+                                )
                             : null,
                         child: AnimatedBuilder(
                           animation: _pulseAnimation,

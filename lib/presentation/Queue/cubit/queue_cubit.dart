@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
-import 'package:spotify/data/models/songs/songs_model.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/song_player_cubit.dart';
+﻿import 'package:bloc/bloc.dart';
+import 'package:soundora/data/models/songs/songs_model.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/song_player_cubit.dart';
 
 import 'queue_state.dart';
 

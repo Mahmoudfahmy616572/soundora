@@ -1,13 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
+﻿import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:spotify/core/config/assets/app_vectors.dart';
-import 'package:spotify/core/widgets/shimmer_widgets.dart';
-import 'package:spotify/presentation/Home/cubit/get_songs_cubit.dart';
-import 'package:spotify/presentation/Home/cubit/get_songs_state.dart';
-import 'package:spotify/presentation/songsPlayPage/songs_play_page.dart';
+import 'package:soundora/core/config/assets/app_vectors.dart';
+import 'package:soundora/core/widgets/shimmer_widgets.dart';
+import 'package:soundora/presentation/Home/cubit/get_songs_cubit.dart';
+import 'package:soundora/presentation/Home/cubit/get_songs_state.dart';
+import 'package:soundora/presentation/songsPlayPage/songs_play_page.dart';
 
 import '../../../data/models/songs/songs_model.dart';
 

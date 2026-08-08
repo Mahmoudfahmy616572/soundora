@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
-import 'package:spotify/domain/usecase/songs/identify_song_usecase.dart';
-import 'package:spotify/serviece_locator.dart';
+﻿import 'package:bloc/bloc.dart';
+import 'package:soundora/domain/usecase/songs/identify_song_usecase.dart';
+import 'package:soundora/serviece_locator.dart';
 
 import 'identify_song_state.dart';
 

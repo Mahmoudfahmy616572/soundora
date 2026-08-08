@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/presentation/SearchPage/search_page.dart';
+import 'package:soundora/presentation/SearchPage/search_page.dart';
 
 class HomeGenresWidget extends StatelessWidget {
   const HomeGenresWidget({super.key});

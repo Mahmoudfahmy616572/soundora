@@ -1,9 +1,9 @@
-import 'package:spotify/data/sources/audiodb/audiodb_data_source.dart';
-import 'package:spotify/data/sources/lastfm/lastfm_data_source.dart';
-import 'package:spotify/data/sources/models/combined_artist_model.dart';
-import 'package:spotify/data/sources/wolfxspotify/wolfxspotify_data_source.dart';
-import 'package:spotify/domain/usecase/usecase.dart';
-import 'package:spotify/serviece_locator.dart';
+﻿import 'package:soundora/data/sources/audiodb/audiodb_data_source.dart';
+import 'package:soundora/data/sources/lastfm/lastfm_data_source.dart';
+import 'package:soundora/data/sources/models/combined_artist_model.dart';
+import 'package:soundora/data/sources/wolfxspotify/wolfxspotify_data_source.dart';
+import 'package:soundora/domain/usecase/usecase.dart';
+import 'package:soundora/serviece_locator.dart';
 
 class ArtistDetailsParam {
   final String artistName;

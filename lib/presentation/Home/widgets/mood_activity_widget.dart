@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/presentation/MoodMap/cubit/mood_map_cubit.dart';
-import 'package:spotify/presentation/MoodMap/mood_map_page.dart';
-import 'package:spotify/serviece_locator.dart';
+import 'package:soundora/presentation/MoodMap/cubit/mood_map_cubit.dart';
+import 'package:soundora/presentation/MoodMap/mood_map_page.dart';
+import 'package:soundora/serviece_locator.dart';
 
 class MoodActivityWidget extends StatelessWidget {
   const MoodActivityWidget({super.key});

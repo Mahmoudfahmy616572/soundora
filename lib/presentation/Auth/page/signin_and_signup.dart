@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:spotify/common/widget/basic_elevatedbutton.dart';
-import 'package:spotify/core/config/assets/app_vectors.dart';
-import 'package:spotify/presentation/Auth/page/register.dart';
-import 'package:spotify/presentation/Auth/page/signin.dart';
+import 'package:soundora/common/widget/basic_elevatedbutton.dart';
+import 'package:soundora/core/config/assets/app_vectors.dart';
+import 'package:soundora/presentation/Auth/page/register.dart';
+import 'package:soundora/presentation/Auth/page/signin.dart';
 
 import '../../../common/appbar/basic_appbar.dart';
 
@@ -47,7 +47,7 @@ class SigninAndSignup extends StatelessWidget {
                   ),
                   SizedBox(height: 21.h),
                   Text(
-                    "Soundora brings you millions of songs, podcasts, and live performances. Start your musical journey today.",
+                    "Soundora understands your music â€” smart lyrics, karaoke, and a listening journey built around you.",
                     style: TextStyle(
                         fontSize: 17.sp,
                         fontWeight: FontWeight.normal,

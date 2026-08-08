@@ -1,5 +1,6 @@
-import 'package:bloc/bloc.dart';
-import 'package:spotify/data/sources/lyrics/lyrics_data_source.dart';
+﻿import 'package:bloc/bloc.dart';
+import 'package:soundora/core/services/lyric_alignment.dart';
+import 'package:soundora/data/sources/lyrics/lyrics_data_source.dart';
 
 part 'karaoke_state.dart';
 
@@ -8,13 +9,22 @@ class KaraokeCubit extends Cubit<KaraokeState> {
   int _currentLineIndex = -1;
   int _tappedCorrectly = 0;
   int _totalTaps = 0;
-  DateTime? _songStartTime;
   bool _isRecording = false;
+  LyricAlignment? _alignment;
 
   KaraokeCubit() : super(const KaraokeInitial());
 
   void setLyrics(List<LyricLine> lyrics) {
     _lyrics = lyrics;
+  }
+
+  void setAlignment(LyricAlignment? alignment) {
+    _alignment = alignment;
+  }
+
+  Duration _effectiveTime(LyricLine line) {
+    final a = _alignment;
+    return a != null ? a.effectiveTime(line.startTime) : line.startTime;
   }
 
   void updateCurrentLine(int index) {
@@ -26,7 +36,6 @@ class KaraokeCubit extends Cubit<KaraokeState> {
   void startSession() {
     _tappedCorrectly = 0;
     _totalTaps = 0;
-    _songStartTime = DateTime.now();
     _isRecording = true;
     _currentLineIndex = -1;
     emit(const KaraokeRecording(score: 0, linesCompleted: 0));
@@ -44,22 +53,20 @@ class KaraokeCubit extends Cubit<KaraokeState> {
     ));
   }
 
-  void onLineTapped(int lineNumber) {
+  /// Judges a tap against the song position reported by the player, not the
+  /// wall clock, so a song started (or seeked) at any time still scores fairly.
+  void onLineTapped(int lineNumber, Duration playerPosition) {
     if (!_isRecording || _currentLineIndex < 0) return;
 
     _totalTaps++;
 
     final expectedLine = _lyrics[_currentLineIndex];
+    final expectedPosition = _effectiveTime(expectedLine);
     final tolerance = Duration(
-      milliseconds: (expectedLine.startTime.inMilliseconds * 0.25).round(),
+      milliseconds: (expectedPosition.inMilliseconds * 0.25).round(),
     );
 
-    final now = DateTime.now();
-    if (_songStartTime == null) return;
-
-    final userPosition = now.difference(_songStartTime!);
-    final expectedPosition = expectedLine.startTime;
-    final diff = (userPosition - expectedPosition).abs();
+    final diff = (playerPosition - expectedPosition).abs();
 
     if (diff <= tolerance) {
       _tappedCorrectly++;

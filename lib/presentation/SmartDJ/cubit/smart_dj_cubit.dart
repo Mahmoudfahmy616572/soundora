@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
-import 'package:spotify/data/sources/deezer/deezer_data_source.dart';
+﻿import 'package:bloc/bloc.dart';
+import 'package:soundora/data/sources/deezer/deezer_data_source.dart';
 
 import 'smart_dj_state.dart';
 

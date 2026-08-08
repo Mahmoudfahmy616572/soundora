@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/common/widget/basic_elevatedbutton.dart';
-import 'package:spotify/presentation/Auth/cubit/otp_cubit.dart';
-import 'package:spotify/presentation/Auth/cubit/otp_state.dart';
-import 'package:spotify/presentation/MainWrapper/main_wrapper.dart';
+import 'package:soundora/common/widget/basic_elevatedbutton.dart';
+import 'package:soundora/presentation/Auth/cubit/otp_cubit.dart';
+import 'package:soundora/presentation/Auth/cubit/otp_state.dart';
+import 'package:soundora/presentation/MainWrapper/main_wrapper.dart';
 
 class OtpVerificationPage extends StatefulWidget {
   final String email;

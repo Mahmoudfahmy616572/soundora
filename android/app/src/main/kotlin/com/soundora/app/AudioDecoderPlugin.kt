@@ -1,4 +1,4 @@
-package com.example.spotify
+﻿package com.soundora.app
 
 import android.media.MediaCodec
 import android.media.MediaExtractor
@@ -13,17 +13,23 @@ import java.nio.ByteOrder
 class AudioDecoderPlugin(engine: FlutterEngine) {
     private val channel = MethodChannel(engine.dartExecutor.binaryMessenger, "audio_decoder")
 
+    private val executor = java.util.concurrent.Executors.newSingleThreadExecutor()
+
     fun register() {
         channel.setMethodCallHandler { call, result ->
             when (call.method) {
                 "decodeToWav" -> {
                     val inputPath = call.argument<String>("inputPath")!!
                     val outputPath = call.argument<String>("outputPath")!!
-                    try {
-                        decodeToWav(inputPath, outputPath)
-                        result.success(outputPath)
-                    } catch (e: Exception) {
-                        result.error("DECODE_ERROR", e.message, null)
+                    // Decoding a full song with MediaCodec can take seconds and must
+                    // never run on the platform main thread (it would ANR the app).
+                    executor.execute {
+                        try {
+                            decodeToWav(inputPath, outputPath)
+                            result.success(outputPath)
+                        } catch (e: Exception) {
+                            result.error("DECODE_ERROR", e.message, null)
+                        }
                     }
                 }
                 else -> result.notImplemented()

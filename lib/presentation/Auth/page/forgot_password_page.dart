@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:spotify/common/widget/basic_elevatedbutton.dart';
-import 'package:spotify/presentation/Auth/cubit/otp_cubit.dart';
-import 'package:spotify/presentation/Auth/cubit/otp_state.dart';
-import 'package:spotify/presentation/Auth/page/signin.dart';
+import 'package:soundora/common/widget/basic_elevatedbutton.dart';
+import 'package:soundora/presentation/Auth/cubit/otp_cubit.dart';
+import 'package:soundora/presentation/Auth/cubit/otp_state.dart';
+import 'package:soundora/presentation/Auth/page/signin.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});

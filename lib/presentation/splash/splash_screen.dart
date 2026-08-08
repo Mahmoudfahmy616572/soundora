@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:spotify/core/config/assets/app_vectors.dart';
-import 'package:spotify/presentation/MainWrapper/main_wrapper.dart';
-import 'package:spotify/presentation/intro/pages/get_started.dart';
+import 'package:soundora/core/config/assets/app_vectors.dart';
+import 'package:soundora/presentation/MainWrapper/main_wrapper.dart';
+import 'package:soundora/presentation/intro/pages/get_started.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SplashScreen extends StatefulWidget {

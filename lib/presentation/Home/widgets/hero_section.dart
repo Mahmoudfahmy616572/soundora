@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/core/config/theme/app_colors.dart';
-import 'package:spotify/presentation/CategoryPage/category_screen.dart';
-import 'package:spotify/presentation/MoodMap/cubit/mood_map_cubit.dart';
-import 'package:spotify/presentation/MoodMap/mood_map_page.dart';
-import 'package:spotify/serviece_locator.dart';
+import 'package:soundora/core/config/theme/app_colors.dart';
+import 'package:soundora/presentation/CategoryPage/category_screen.dart';
+import 'package:soundora/presentation/MoodMap/cubit/mood_map_cubit.dart';
+import 'package:soundora/presentation/MoodMap/mood_map_page.dart';
+import 'package:soundora/serviece_locator.dart';
 
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
@@ -19,9 +19,9 @@ class HeroSection extends StatelessWidget {
 
   String _getGreetingEmoji() {
     final hour = DateTime.now().hour;
-    if (hour < 12) return '☀️';
-    if (hour < 17) return '🌤️';
-    return '🌙';
+    if (hour < 12) return 'â˜€ï¸';
+    if (hour < 17) return 'ðŸŒ¤ï¸';
+    return 'ðŸŒ™';
   }
 
   @override

@@ -1,10 +1,10 @@
-import 'package:bloc_test/bloc_test.dart';
+﻿import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:spotify/data/models/songs/songs_model.dart';
-import 'package:spotify/presentation/Queue/cubit/queue_cubit.dart';
-import 'package:spotify/presentation/Queue/cubit/queue_state.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/song_player_cubit.dart';
+import 'package:soundora/data/models/songs/songs_model.dart';
+import 'package:soundora/presentation/Queue/cubit/queue_cubit.dart';
+import 'package:soundora/presentation/Queue/cubit/queue_state.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/song_player_cubit.dart';
 
 class MockSongPlayerCubit extends Mock implements SongPlayerCubit {}
 

@@ -1,17 +1,17 @@
-import 'package:cached_network_image/cached_network_image.dart';
+﻿import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/common/appbar/basic_appbar.dart';
-import 'package:spotify/data/models/songs/songs_model.dart';
-import 'package:spotify/presentation/DownloadedSongs/downloaded_songs.dart';
-import 'package:spotify/presentation/Home/cubit/recently_played/recently_played_cubit.dart';
-import 'package:spotify/presentation/Home/cubit/recently_played/recently_played_state.dart';
-import 'package:spotify/presentation/LikedSongs/liked_songs.dart'
+import 'package:soundora/common/appbar/basic_appbar.dart';
+import 'package:soundora/data/models/songs/songs_model.dart';
+import 'package:soundora/presentation/DownloadedSongs/downloaded_songs.dart';
+import 'package:soundora/presentation/Home/cubit/recently_played/recently_played_cubit.dart';
+import 'package:soundora/presentation/Home/cubit/recently_played/recently_played_state.dart';
+import 'package:soundora/presentation/LikedSongs/liked_songs.dart'
     show LikedsongsPage;
-import 'package:spotify/presentation/LikedSongs/cubit/favourite_songs_cubit.dart';
-import 'package:spotify/presentation/LikedSongs/cubit/favourite_songs_state.dart';
-import 'package:spotify/presentation/songsPlayPage/songs_play_page.dart';
+import 'package:soundora/presentation/LikedSongs/cubit/favourite_songs_cubit.dart';
+import 'package:soundora/presentation/LikedSongs/cubit/favourite_songs_state.dart';
+import 'package:soundora/presentation/songsPlayPage/songs_play_page.dart';
 
 class LibraryPage extends StatefulWidget {
   const LibraryPage({super.key});

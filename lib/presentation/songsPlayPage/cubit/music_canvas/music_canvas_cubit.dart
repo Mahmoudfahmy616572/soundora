@@ -1,5 +1,5 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spotify/domain/usecase/songs/get_music_videos_usecase.dart';
+﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:soundora/domain/usecase/songs/get_music_videos_usecase.dart';
 
 import 'music_canvas_state.dart';
 

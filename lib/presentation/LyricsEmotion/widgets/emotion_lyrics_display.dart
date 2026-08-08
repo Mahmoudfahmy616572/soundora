@@ -1,14 +1,14 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:spotify/core/config/theme/app_colors.dart';
-import 'package:spotify/presentation/LyricsEmotion/cubit/lyrics_emotion_cubit.dart';
-import 'package:spotify/presentation/LyricsEmotion/cubit/lyrics_emotion_state.dart';
-import 'package:spotify/presentation/LyricsEmotion/models/lyric_emotion_model.dart';
-import 'package:spotify/presentation/LyricsEmotion/widgets/emotion_background.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/song_player_cubit.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/song_player_state.dart';
+import 'package:soundora/core/config/theme/app_colors.dart';
+import 'package:soundora/presentation/LyricsEmotion/cubit/lyrics_emotion_cubit.dart';
+import 'package:soundora/presentation/LyricsEmotion/cubit/lyrics_emotion_state.dart';
+import 'package:soundora/presentation/LyricsEmotion/models/lyric_emotion_model.dart';
+import 'package:soundora/presentation/LyricsEmotion/widgets/emotion_background.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/song_player_cubit.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/song_player_state.dart';
 
 class EmotionLyricsDisplay extends StatefulWidget {
   const EmotionLyricsDisplay({super.key});

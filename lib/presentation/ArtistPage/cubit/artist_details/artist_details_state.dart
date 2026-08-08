@@ -1,5 +1,5 @@
-import 'package:equatable/equatable.dart';
-import 'package:spotify/data/sources/models/combined_artist_model.dart';
+﻿import 'package:equatable/equatable.dart';
+import 'package:soundora/data/sources/models/combined_artist_model.dart';
 
 abstract class ArtistDetailsState extends Equatable {
   @override

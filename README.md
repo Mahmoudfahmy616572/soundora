@@ -1,6 +1,6 @@
-# 🎧 Flutter Spotify Clone (Supabase Edition)
+# 🎧 Soundora
 
-A professional music streaming application built with **Flutter** and **Supabase**. This project features a robust architecture and advanced audio synchronization.
+Soundora is a smart Arabic music experience built with **Flutter** and **Supabase** — maqam-aware playback, synced lyrics, karaoke and a personal listening journey.
 
 ## ✨ Key Features
 * **Live Synced Lyrics:** Real-time lyric highlighting and auto-scrolling synced with audio timestamps.

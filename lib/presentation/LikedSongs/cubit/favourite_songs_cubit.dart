@@ -1,9 +1,10 @@
-import 'package:bloc/bloc.dart';
+﻿import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
-import 'package:spotify/data/models/songs/songs_model.dart';
-import 'package:spotify/data/sources/favourites/favourite_songs_data_source.dart';
+import 'package:get_it/get_it.dart';
+import 'package:soundora/data/models/songs/songs_model.dart';
+import 'package:soundora/data/sources/favourites/favourite_songs_data_source.dart';
+import 'package:soundora/presentation/Gamification/cubit/achievement_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
 import 'favourite_songs_state.dart';
 
 class FavouriteSongsCubit extends Cubit<FavouriteSongsState> {
@@ -72,6 +73,12 @@ class FavouriteSongsCubit extends Cubit<FavouriteSongsState> {
       favouriteSongsIds: updatedIds,
       favouriteSongs: updatedSongs,
     ));
+
+    if (!wasFavourite) {
+      try {
+        GetIt.instance<AchievementCubit>().onFavouriteAdded();
+      } catch (_) {}
+    }
 
     try {
       final int? numericId = int.tryParse(songId);

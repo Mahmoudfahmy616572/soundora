@@ -1,19 +1,20 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/core/config/theme/app_colors.dart';
-import 'package:spotify/data/sources/lyrics/lyrics_data_source.dart';
-import 'package:spotify/presentation/LyricsEmotion/cubit/lyrics_emotion_cubit.dart';
-import 'package:spotify/presentation/LyricsEmotion/cubit/lyrics_emotion_state.dart';
-import 'package:spotify/presentation/LyricsEmotion/models/lyric_emotion_model.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/lyrics/lyrics_cubit.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/lyrics/lyrics_state.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/song_player_cubit.dart';
-import 'package:spotify/presentation/songsPlayPage/cubit/song_player_state.dart';
+import 'package:soundora/core/config/theme/app_colors.dart';
+import 'package:soundora/core/services/lyric_alignment.dart';
+import 'package:soundora/data/sources/lyrics/lyrics_data_source.dart';
+import 'package:soundora/presentation/LyricsEmotion/cubit/lyrics_emotion_cubit.dart';
+import 'package:soundora/presentation/LyricsEmotion/cubit/lyrics_emotion_state.dart';
+import 'package:soundora/presentation/LyricsEmotion/models/lyric_emotion_model.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/lyrics/lyrics_cubit.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/lyrics/lyrics_state.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/song_player_cubit.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/song_player_state.dart';
 
 class SwipeUpLyricsDisplay extends StatefulWidget {
   const SwipeUpLyricsDisplay({super.key});
@@ -68,17 +69,20 @@ class _SwipeUpLyricsDisplayState extends State<SwipeUpLyricsDisplay>
     return lyricLines.map((l) => l.text).where((t) => t.isNotEmpty).toList();
   }
 
-  int _getCurrentLineIndex(List<LyricLine> lyricLines, Duration position) {
-    if (lyricLines.isEmpty) return 0;
-    int index = 0;
+  int _getCurrentLineIndex(
+      List<LyricLine> lyricLines, Duration position, LyricAlignment? alignment) {
+    if (lyricLines.isEmpty) return -1;
+    int index = -1;
     for (int i = 0; i < lyricLines.length; i++) {
-      if (lyricLines[i].startTime <= position) {
+      final t = lyricLines[i].startTime;
+      final effective = alignment != null ? alignment.effectiveTime(t) : t;
+      if (position >= effective) {
         index = i;
       } else {
         break;
       }
     }
-    return index.clamp(0, lyricLines.length - 1);
+    return index;
   }
 
   void _handleLyricsState(LyricsState lyricsState, SongPlayerState playerState) {
@@ -155,7 +159,8 @@ class _SwipeUpLyricsDisplayState extends State<SwipeUpLyricsDisplay>
 
   Widget _buildLyricsView(List<LyricLine> lyricLines, SongPlayerState playerState) {
     final lines = _extractLines(lyricLines);
-    final currentIndex = _getCurrentLineIndex(lyricLines, _currentPosition);
+    final alignment = playerState is SongPlayerLoaded ? playerState.alignment : null;
+    final currentIndex = _getCurrentLineIndex(lyricLines, _currentPosition, alignment);
 
     return GestureDetector(
       onVerticalDragEnd: (details) {

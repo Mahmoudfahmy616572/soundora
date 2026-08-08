@@ -1,6 +1,6 @@
-import 'package:dartz/dartz.dart';
-import 'package:spotify/data/models/auth/create_user_req.dart';
-import 'package:spotify/data/models/auth/signin_req.dart';
+﻿import 'package:dartz/dartz.dart';
+import 'package:soundora/data/models/auth/create_user_req.dart';
+import 'package:soundora/data/models/auth/signin_req.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class AuthSupabaseServieces {

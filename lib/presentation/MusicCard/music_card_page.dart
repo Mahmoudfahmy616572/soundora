@@ -1,11 +1,17 @@
+﻿import 'dart:io' show File;
 import 'dart:ui' as ui;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spotify/core/config/theme/app_colors.dart';
-import 'package:spotify/data/models/songs/songs_model.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:soundora/core/config/theme/app_colors.dart';
+import 'package:soundora/data/models/songs/songs_model.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/song_player_cubit.dart';
+import 'package:soundora/presentation/songsPlayPage/cubit/song_player_state.dart';
 
 class MusicCardPage extends StatelessWidget {
   final SongModel? song;
@@ -32,10 +38,19 @@ class MusicCardPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Center(
-        child: song != null
-            ? _MusicCardPreview(song: song!)
-            : _noSongPlaceholder(),
+      body: BlocBuilder<SongPlayerCubit, SongPlayerState>(
+        builder: (context, playerState) {
+          final SongModel? currentSong = song ??
+              (playerState is SongPlayerLoaded &&
+                      playerState.playlist.isNotEmpty
+                  ? playerState.playlist[playerState.currentIndex]
+                  : null);
+          return Center(
+            child: currentSong != null
+                ? _MusicCardPreview(song: currentSong)
+                : _noSongPlaceholder(),
+          );
+        },
       ),
     );
   }
@@ -108,7 +123,7 @@ class _MusicCardPreviewState extends State<_MusicCardPreview> {
                     )
                   : const Icon(Icons.save_alt, color: Colors.white),
               label: Text(
-                _isSaving ? 'Saving...' : 'Save Card',
+                _isSaving ? 'Saving...' : 'Save & Share Card',
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
@@ -295,15 +310,28 @@ class _MusicCardPreviewState extends State<_MusicCardPreview> {
         final byteData =
             await image.toByteData(format: ui.ImageByteFormat.png);
         if (byteData != null && mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Card saved!',
-                style: TextStyle(fontSize: 14.sp),
-              ),
-              backgroundColor: AppColors.primaryColor,
-            ),
+          final tempDir = await getTemporaryDirectory();
+          final file = File(
+            '${tempDir.path}/music_card_${DateTime.now().millisecondsSinceEpoch}.png',
+          ).writeAsBytes(byteData.buffer.asUint8List());
+
+          if (!mounted) return;
+          await Share.shareXFiles(
+            [XFile((await file).path, mimeType: 'image/png')],
+            text: '${widget.song.title} â€” ${widget.song.artist} on Soundora',
           );
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Card saved to your device',
+                  style: TextStyle(fontSize: 14.sp),
+                ),
+                backgroundColor: AppColors.primaryColor,
+              ),
+            );
+          }
         }
       }
     } catch (_) {
