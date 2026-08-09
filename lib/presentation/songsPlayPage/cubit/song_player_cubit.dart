@@ -100,10 +100,14 @@ class SongPlayerCubit extends Cubit<SongPlayerState> with WidgetsBindingObserver
   Color get dominantColor => _dominantColor;
   MaqamResult? get currentMaqam => _currentMaqam;
 
-  SongPlayerCubit({LyricsCubit? lyricsCubit, AudioPipeline? audioPipeline})
-      : _lyricsCubit = lyricsCubit,
+  SongPlayerCubit({
+    LyricsCubit? lyricsCubit,
+    AudioPipeline? audioPipeline,
+    AudioPlayer? audioPlayerOverride,
+  })  : _lyricsCubit = lyricsCubit,
         super(const SongPlayerLoading()) {
-    audioPlayer = AudioPlayer(audioPipeline: audioPipeline ?? AudioPipeline());
+    audioPlayer =
+        audioPlayerOverride ?? AudioPlayer(audioPipeline: audioPipeline ?? AudioPipeline());
     WidgetsBinding.instance.addObserver(this);
     _subscriptions.add(audioPlayer.durationStream.listen((duration) {
       if (duration != null) {

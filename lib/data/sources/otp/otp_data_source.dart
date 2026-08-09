@@ -7,7 +7,10 @@ abstract class OtpDataSource {
 }
 
 class OtpDataSourceImpl implements OtpDataSource {
-  final Dio _dio = Dio();
+  final Dio _dio = Dio(BaseOptions(
+    connectTimeout: const Duration(seconds: 15),
+    receiveTimeout: const Duration(seconds: 15),
+  ));
 
   @override
   Future<bool> sendOtp({required String email, required String otp}) async {

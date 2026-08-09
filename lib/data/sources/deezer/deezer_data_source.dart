@@ -44,7 +44,8 @@ class DeezerDataSourceImpl implements DeezerDataSource {
   List<SongModel> _parseTracks(Map<String, dynamic> json) {
     final data = json['data'] as List<dynamic>? ?? [];
     return data
-        .map((track) => DeezerTrackModel.fromJson(track as Map<String, dynamic>))
+        .whereType<Map<String, dynamic>>()
+        .map((track) => DeezerTrackModel.fromJson(track))
         .where((t) => t.previewUrl.isNotEmpty)
         .map((t) => t.toSongModel())
         .toList();
@@ -88,7 +89,8 @@ class DeezerDataSourceImpl implements DeezerDataSource {
   Future<List<SongModel>> getNewReleases({String country = 'eg', int limit = 25}) async {
     try {
       final response = await _dio.get('/chart/$country', queryParameters: {'limit': limit});
-      final chartData = response.data as Map<String, dynamic>;
+      final raw = response.data;
+      final chartData = raw is Map<String, dynamic> ? raw : const <String, dynamic>{};
       final tracksData = chartData['tracks'] as Map<String, dynamic>? ?? {};
       return _parseTracks(tracksData);
     } on DioException {
@@ -100,7 +102,9 @@ class DeezerDataSourceImpl implements DeezerDataSource {
   Future<SongModel?> getTrack(int id) async {
     try {
       final response = await _dio.get('/track/$id');
-      final track = DeezerTrackModel.fromJson(response.data as Map<String, dynamic>);
+      final raw = response.data;
+      if (raw is! Map<String, dynamic>) return null;
+      final track = DeezerTrackModel.fromJson(raw);
       return track.toSongModel();
     } on DioException {
       return null;

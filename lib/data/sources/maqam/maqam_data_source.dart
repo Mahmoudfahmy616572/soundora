@@ -29,7 +29,9 @@ class MaqamDataSourceImpl implements MaqamDataSource {
   Future<List<SongModel>> getSongsByMaqam(String maqam) async {
     final rows = await _fetchAssignments();
     return rows
-        .where((row) => (row['maqam'] as String?) == maqam)
+        .where((row) =>
+            (row['maqam'] as String?) == maqam &&
+            row['Songs'] is Map<String, dynamic>)
         .map((row) => _toSongModel(row['Songs'] as Map<String, dynamic>))
         .toList();
   }

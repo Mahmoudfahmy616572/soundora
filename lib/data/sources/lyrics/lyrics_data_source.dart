@@ -54,9 +54,10 @@ class LyricsDataSourceImpl implements LyricsDataSource {
   static const String _lyricaBase = 'https://wilooper-lyrica.hf.space';
   static const String _lrclibBase = 'https://lrclib.net/api';
   static const String _innerTubeBase = 'https://music.youtube.com/youtubei/v1';
-  static const String _innerTubeKey =
-      'AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8';
   static const String _lyricsPageType = 'MUSIC_PAGE_TYPE_TRACK_LYRICS';
+
+  /// YouTube Music innerTube key, supplied via .env (YOUTUBE_INNERTUBE_KEY).
+  static String get _innerTubeKey => dotenv.env['YOUTUBE_INNERTUBE_KEY'] ?? '';
 
   /// Cache schema version. Bumped to discard stale/wrongly-matched entries
   /// cached by older builds (the old race used to cache mismatched lyrics).
