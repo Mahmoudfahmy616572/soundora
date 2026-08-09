@@ -1,7 +1,7 @@
 class AppVectors {
   static const String basePath = 'assets/vectors/';
   static const String format = '.svg';
-  static const String logo = "${basePath}soundora_logo$format";
+  static const String logo = 'assets/images/app_icon_transparent.png';
   static const String moon = "${basePath}Moon1$format";
   static const String sun = "${basePath}Sun1$format";
   static const String topRightUnion = "${basePath}topRightUnion$format";

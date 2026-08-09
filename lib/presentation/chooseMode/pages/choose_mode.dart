@@ -1,6 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+
 import 'package:soundora/presentation/chooseMode/bloc/theme_cubit.dart';
 
 import '../../../common/widget/basic_elevatedbutton.dart';
@@ -22,7 +22,7 @@ class ChooseMode extends StatelessWidget {
             children: [
               Align(
                   alignment: Alignment.topCenter,
-                  child: SvgPicture.asset(AppVectors.logo, width: 180)),
+                  child: Image.asset(AppVectors.logo, width: 180)),
               const Spacer(),
               const Text(
                 "Choose mode",

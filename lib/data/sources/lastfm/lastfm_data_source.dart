@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'models/lastfm_track_model.dart';
 import 'models/lastfm_artist_model.dart';
@@ -35,12 +36,17 @@ class LastFmDataSourceImpl implements LastFmDataSource {
         'track': track,
         'limit': limit,
       });
-      final tracks = response.data['similartracks']?['track'] as List<dynamic>? ?? [];
-      return tracks
+      final raw = response.data['similartracks']?['track'];
+      final rawList = raw is List
+          ? raw
+          : (raw is Map ? [raw] : const <dynamic>[]);
+      final tracks = rawList
           .map((t) => LastFmTrackModel.fromJson(t as Map<String, dynamic>))
           .where((t) => t.name.isNotEmpty)
           .toList();
-    } catch (_) {
+      return tracks;
+    } catch (e) {
+      debugPrint('[LastFM] getSimilarTracks FAILED: $e');
       return [];
     }
   }

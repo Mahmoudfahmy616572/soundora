@@ -33,7 +33,7 @@ class SigninAndSignup extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(
+                  Image.asset(
                     AppVectors.logo,
                     width: 235.w,
                     height: 71.h,

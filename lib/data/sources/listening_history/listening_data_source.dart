@@ -125,6 +125,8 @@ class ListenStats {
   bool get isFavourite => playCount >= 3 && averageCompletion > 0.6;
   bool get isSkippedOften => skipCount >= 2 && playCount > 0 && skipCount / playCount > 0.5;
 
+  int get recencyMs => DateTime.now().millisecondsSinceEpoch - lastPlayed;
+
   Map<String, dynamic> toJson() => {
         'songId': songId,
         'title': title,

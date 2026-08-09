@@ -1,4 +1,5 @@
 ﻿import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -84,9 +85,15 @@ class TasteProfileCubit extends Cubit<TasteProfileState> {
       final topArtists = sortedArtists.take(15).map((e) => e.key).toList();
 
       final genreScores = <String, double>{};
-      for (final artist in topArtists) {
-        final genres = await _genreDetector.detectGenresForArtist(artist);
-        final weight = (artistWeight[artist] ?? 0) / (topArtists.length);
+      final genreArtistCount = math.min(topArtists.length, 8);
+      final genreResults = await Future.wait(
+        topArtists.take(genreArtistCount).map((artist) async {
+          final genres = await _genreDetector.detectGenresForArtist(artist);
+          return (artist, genres);
+        }),
+      );
+      for (final (artist, genres) in genreResults) {
+        final weight = (artistWeight[artist] ?? 0) / topArtists.length;
         for (final genre in genres) {
           genreScores[genre] = (genreScores[genre] ?? 0) + weight;
         }

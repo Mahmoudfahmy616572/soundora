@@ -3,7 +3,6 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -101,16 +100,10 @@ class LyricShareCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset(
-                'assets/vectors/soundora_logo.svg',
+              Image.asset(
+                'assets/images/app_icon_transparent.png',
                 width: 18,
                 height: 18,
-                color: accentColor.withOpacity(0.7),
-                errorBuilder: (context, error, stackTrace) => Icon(
-                  Icons.graphic_eq,
-                  size: 18,
-                  color: accentColor.withOpacity(0.7),
-                ),
               ),
               const SizedBox(width: 8),
               Text(

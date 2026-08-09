@@ -1,6 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:soundora/core/config/assets/app_vectors.dart';
 import 'package:soundora/core/config/theme/app_colors.dart';
 
@@ -20,7 +20,7 @@ class GetStarted extends StatelessWidget {
             children: [
               Align(
                   alignment: Alignment.topCenter,
-                  child: SvgPicture.asset(AppVectors.logo, width: 180.w)),
+                  child: Image.asset(AppVectors.logo, width: 180.w)),
               Spacer(),
               Text(
                 "Enjoy listening to music",

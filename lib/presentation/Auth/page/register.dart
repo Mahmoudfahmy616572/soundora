@@ -1,7 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:soundora/common/appbar/basic_appbar.dart';
 import 'package:soundora/common/widget/basic_elevatedbutton.dart';
 import 'package:soundora/core/config/assets/app_vectors.dart';
@@ -52,11 +51,9 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BasicAppbar(
-        title: SvgPicture.asset(
+        title: Image.asset(
           AppVectors.logo,
-          width: 108.w,
           height: 33.h,
-          fit: BoxFit.fill,
         ),
       ),
       body: SingleChildScrollView(

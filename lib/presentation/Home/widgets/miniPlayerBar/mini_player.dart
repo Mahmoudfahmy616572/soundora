@@ -44,15 +44,16 @@ class _MiniPlayerState extends State<MiniPlayer> {
             }
           },
           onVerticalDragEnd: (details) {
-            if (_isDraggingDown && (_dragOffset > 80 || (details.primaryVelocity ?? 0) > 600)) {
-              cubit.playOrpauseSong();
-              cubit.stopAndDismiss();
-              return;
-            }
+            final shouldDismiss = _isDraggingDown &&
+                (_dragOffset > 80 ||
+                    (details.primaryVelocity ?? 0) > 600);
             setState(() {
               _dragOffset = 0;
               _isDraggingDown = false;
             });
+            if (shouldDismiss) {
+              cubit.stopAndDismiss();
+            }
           },
           onHorizontalDragEnd: (details) {
             if (_isDraggingDown) return;

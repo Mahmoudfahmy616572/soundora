@@ -1,6 +1,5 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:soundora/common/appbar/basic_appbar.dart';
 import 'package:soundora/core/config/assets/app_vectors.dart';
 import 'package:soundora/presentation/Auth/page/forgot_password_page.dart';
@@ -45,11 +44,9 @@ class _SigninPageState extends State<SigninPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BasicAppbar(
-        title: SvgPicture.asset(
+        title: Image.asset(
           AppVectors.logo,
-          width: 108.w,
           height: 33.h,
-          fit: BoxFit.fill,
         ),
       ),
       body: SingleChildScrollView(

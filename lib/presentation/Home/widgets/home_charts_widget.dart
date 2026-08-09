@@ -47,22 +47,50 @@ class _HomeChartsWidgetState extends State<HomeChartsWidget> {
                   style: TextStyle(color: Colors.grey)),
             );
           }
-          return SizedBox(
-            height: 180.h,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              itemCount: state.songs.length.clamp(0, 10),
-              itemBuilder: (context, index) {
-                final song = state.songs[index];
-                return _ChartCard(
-                  song: song,
-                  rank: index + 1,
-                  allSongs: state.songs,
-                  index: index,
-                );
-              },
-            ),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.local_fire_department,
+                      color: AppColors.primaryColor,
+                      size: 18.sp,
+                    ),
+                    SizedBox(width: 6.w),
+                    Text(
+                      'الرائج الآن',
+                      style: TextStyle(
+                        fontSize: 19.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontFamily: 'Satoshi',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 12.h),
+              SizedBox(
+                height: 180.h,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  itemCount: state.songs.length.clamp(0, 10),
+                  itemBuilder: (context, index) {
+                    final song = state.songs[index];
+                    return _ChartCard(
+                      song: song,
+                      rank: index + 1,
+                      allSongs: state.songs,
+                      index: index,
+                    );
+                  },
+                ),
+              ),
+            ],
           );
         }
         return const SizedBox.shrink();

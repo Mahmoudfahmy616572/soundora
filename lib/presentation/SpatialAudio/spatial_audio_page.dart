@@ -1,12 +1,9 @@
 ﻿import 'dart:math' show sin, cos;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soundora/core/config/theme/app_colors.dart';
-import 'package:soundora/presentation/songsPlayPage/cubit/song_player_cubit.dart';
+import 'package:soundora/presentation/SpatialAudio/spatial_audio_engine.dart';
 
 class SpatialAudioPage extends StatefulWidget {
   const SpatialAudioPage({super.key});
@@ -17,42 +14,18 @@ class SpatialAudioPage extends StatefulWidget {
 
 class _SpatialAudioPageState extends State<SpatialAudioPage>
     with TickerProviderStateMixin {
-  bool _spatialEnabled = false;
-  double _intensity = 0.7;
-  String _selectedPreset = 'Immersive';
+  final SpatialAudioEngine _engine = SpatialAudioEngine.instance;
+
   late AnimationController _rotateController;
   late AnimationController _pulseController;
 
-  final List<Map<String, dynamic>> _presets = [
-    {
-      'name': 'Immersive',
-      'icon': Icons.surround_sound,
-      'description': 'Full volume, natural tempo',
-      'volume': 1.0,
-      'speed': 1.0,
-    },
-    {
-      'name': 'Concert Hall',
-      'icon': Icons.stadium,
-      'description': 'Slightly slower, deeper tone',
-      'volume': 1.0,
-      'speed': 0.95,
-    },
-    {
-      'name': 'Studio',
-      'icon': Icons.headphones,
-      'description': 'Clean monitoring, lower gain',
-      'volume': 0.85,
-      'speed': 1.0,
-    },
-    {
-      'name': 'Intimate',
-      'icon': Icons.hearing,
-      'description': 'Softer, brighter and closer',
-      'volume': 0.7,
-      'speed': 1.05,
-    },
-  ];
+  // Local UI mirror of the engine settings.
+  bool _enabled = false;
+  SpatialRoom _room = kSpatialRooms.first;
+  double _intensity = 0.7;
+  double _pitch = 1.0;
+  List<double> _eqCurve = List.of(kSpatialRooms.first.eq);
+  bool _eqCustom = false;
 
   @override
   void initState() {
@@ -75,48 +48,68 @@ class _SpatialAudioPageState extends State<SpatialAudioPage>
     super.dispose();
   }
 
-  /// Applies the chosen effect to the real audio player. Every preset maps to
-  /// an audible just_audio setting (volume gain + tempo), and the intensity
-  /// slider scales the gain, so toggling it genuinely changes the sound.
-  void _applyAudioSettings(AudioPlayer player) {
-    if (_spatialEnabled) {
-      final preset =
-          _presets.firstWhere((p) => p['name'] == _selectedPreset);
-      final baseVolume = (preset['volume'] as num).toDouble();
-      final baseSpeed = (preset['speed'] as num).toDouble();
-      player.setVolume(baseVolume * (0.5 + 0.5 * _intensity));
-      player.setSpeed(baseSpeed);
-    } else {
-      player.setVolume(1.0);
-      player.setSpeed(1.0);
-    }
-  }
-
-  Future<void> _saveSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('spatial_enabled', _spatialEnabled);
-    await prefs.setDouble('spatial_intensity', _intensity);
-    await prefs.setString('spatial_preset', _selectedPreset);
+  /// Pushes the current UI state into the engine, applies it to the live
+  /// audio player and persists it.
+  Future<void> _push({
+    bool? enabled,
+    SpatialRoom? room,
+    double? intensity,
+    double? pitch,
+    List<double>? eq,
+    bool? eqCustom,
+  }) async {
+    _engine.setEnabled(enabled ?? _enabled);
+    _engine.setRoom(room ?? _room);
+    _engine.setIntensity(intensity ?? _intensity);
+    _engine.setPitch(pitch ?? _pitch);
+    _engine.setCustomEq(eqCustom == true ? (eq ?? _room.eq) : null);
+    await _engine.apply();
+    await _engine.save();
   }
 
   Future<void> _restoreSettings() async {
-    final player = context.read<SongPlayerCubit>().audioPlayer;
-    final prefs = await SharedPreferences.getInstance();
+    await _engine.restore();
     if (!mounted) return;
-    _spatialEnabled = prefs.getBool('spatial_enabled') ?? false;
-    _intensity = prefs.getDouble('spatial_intensity') ?? 0.7;
-    final preset = prefs.getString('spatial_preset');
-    if (preset != null && _presets.any((p) => p['name'] == preset)) {
-      _selectedPreset = preset;
-    }
-    _applyAudioSettings(player);
+    setState(() {
+      _enabled = _engine.enabled;
+      _room = _engine.room;
+      _intensity = _engine.intensity;
+      _pitch = _engine.pitch;
+      _eqCurve = List.of(_engine.customEq ?? _room.eq);
+      _eqCustom = _engine.customEq != null;
+    });
+  }
+
+  void _selectRoom(SpatialRoom room) {
+    setState(() {
+      _room = room;
+      _eqCustom = false;
+      _eqCurve = List.of(room.eq);
+    });
+    _push(room: room, eq: room.eq, eqCustom: false);
+  }
+
+  void _onEqBandChanged(int index, double value) {
+    setState(() {
+      _eqCurve[index] = value;
+      _eqCustom = true;
+    });
+    _push(eq: _eqCurve, eqCustom: true);
+  }
+
+  void _resetEq() {
+    setState(() {
+      _eqCustom = false;
+      _eqCurve = List.of(_room.eq);
+    });
+    _push(eq: _room.eq, eqCustom: false);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_spatialEnabled && !_rotateController.isAnimating) {
+    if (_enabled && !_rotateController.isAnimating) {
       _rotateController.repeat();
-    } else if (!_spatialEnabled && _rotateController.isAnimating) {
+    } else if (!_enabled && _rotateController.isAnimating) {
       _rotateController.stop();
     }
 
@@ -146,9 +139,15 @@ class _SpatialAudioPageState extends State<SpatialAudioPage>
             SizedBox(height: 28.h),
             _buildToggle(),
             SizedBox(height: 24.h),
+            _buildRoomSection(),
+            SizedBox(height: 24.h),
             _buildIntensitySlider(),
-            SizedBox(height: 28.h),
-            _buildPresets(),
+            SizedBox(height: 24.h),
+            _buildPitchSlider(),
+            SizedBox(height: 24.h),
+            _buildEqSection(),
+            SizedBox(height: 20.h),
+            _buildInfoCard(),
           ],
         ),
       ),
@@ -163,7 +162,7 @@ class _SpatialAudioPageState extends State<SpatialAudioPage>
         shape: BoxShape.circle,
         color: Colors.grey[900],
         border: Border.all(
-          color: _spatialEnabled
+          color: _enabled
               ? AppColors.primaryColor.withOpacity(0.5)
               : Colors.grey[800]!,
           width: 2,
@@ -180,7 +179,7 @@ class _SpatialAudioPageState extends State<SpatialAudioPage>
                 child: CustomPaint(
                   size: Size(260.w, 260.w),
                   painter: _SpatialRingsPainter(
-                    enabled: _spatialEnabled,
+                    enabled: _enabled,
                     intensity: _intensity,
                   ),
                 ),
@@ -191,18 +190,14 @@ class _SpatialAudioPageState extends State<SpatialAudioPage>
             animation: _pulseController,
             builder: (context, child) {
               return Transform.scale(
-                scale: _spatialEnabled
-                    ? 0.95 + _pulseController.value * 0.1
-                    : 1.0,
+                scale: _enabled ? 0.95 + _pulseController.value * 0.1 : 1.0,
                 child: Container(
                   width: 70.w,
                   height: 70.w,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: _spatialEnabled
-                        ? AppColors.primaryColor
-                        : Colors.grey[700],
-                    boxShadow: _spatialEnabled
+                    color: _enabled ? AppColors.primaryColor : Colors.grey[700],
+                    boxShadow: _enabled
                         ? [
                             BoxShadow(
                               color: AppColors.primaryColor
@@ -214,7 +209,7 @@ class _SpatialAudioPageState extends State<SpatialAudioPage>
                         : [],
                   ),
                   child: Icon(
-                    Icons.headphones,
+                    _room.icon,
                     color: Colors.white,
                     size: 32.sp,
                   ),
@@ -224,19 +219,19 @@ class _SpatialAudioPageState extends State<SpatialAudioPage>
           ),
           Positioned(
             top: 20.w,
-            child: _buildSpeakerDot('L', _spatialEnabled),
+            child: _buildSpeakerDot('L', _enabled),
           ),
           Positioned(
             bottom: 20.w,
-            child: _buildSpeakerDot('R', _spatialEnabled),
+            child: _buildSpeakerDot('R', _enabled),
           ),
           Positioned(
             left: 20.w,
-            child: _buildSpeakerDot('LS', _spatialEnabled),
+            child: _buildSpeakerDot('LS', _enabled),
           ),
           Positioned(
             right: 20.w,
-            child: _buildSpeakerDot('RS', _spatialEnabled),
+            child: _buildSpeakerDot('RS', _enabled),
           ),
         ],
       ),
@@ -302,17 +297,78 @@ class _SpatialAudioPageState extends State<SpatialAudioPage>
             ],
           ),
           Switch(
-            value: _spatialEnabled,
+            value: _enabled,
             onChanged: (val) {
-              setState(() => _spatialEnabled = val);
-              _applyAudioSettings(
-                  context.read<SongPlayerCubit>().audioPlayer);
-              _saveSettings();
+              setState(() => _enabled = val);
+              _push(enabled: val);
             },
             activeColor: AppColors.primaryColor,
             activeTrackColor: AppColors.primaryColor.withOpacity(0.3),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildRoomSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Sound Rooms (${kSpatialRooms.length})',
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        SizedBox(height: 4.h),
+        Text(
+          'Choose your acoustic space — real DSP per room',
+          style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+        ),
+        SizedBox(height: 12.h),
+        Wrap(
+          spacing: 8.w,
+          runSpacing: 8.h,
+          children: kSpatialRooms.map(_buildRoomChip).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRoomChip(SpatialRoom room) {
+    final selected = _room.id == room.id;
+    return GestureDetector(
+      onTap: () => _selectRoom(room),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.r),
+          color: selected
+              ? AppColors.primaryColor.withOpacity(0.15)
+              : Colors.grey[900],
+          border: Border.all(
+            color: selected ? AppColors.primaryColor : Colors.grey[800]!,
+            width: selected ? 1.5 : 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(room.icon, color: selected ? AppColors.primaryColor : Colors.grey, size: 16.sp),
+            SizedBox(width: 6.w),
+            Text(
+              room.name,
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -359,12 +415,10 @@ class _SpatialAudioPageState extends State<SpatialAudioPage>
             ),
             child: Slider(
               value: _intensity,
-              onChanged: _spatialEnabled
+              onChanged: _enabled
                   ? (val) {
                       setState(() => _intensity = val);
-                      _applyAudioSettings(
-                          context.read<SongPlayerCubit>().audioPlayer);
-                      _saveSettings();
+                      _push(intensity: val);
                     }
                   : null,
               min: 0.0,
@@ -383,81 +437,185 @@ class _SpatialAudioPageState extends State<SpatialAudioPage>
     );
   }
 
-  Widget _buildPresets() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Presets',
-          style: TextStyle(
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        SizedBox(height: 12.h),
-        ...(_presets.map((preset) {
-          final isSelected = _selectedPreset == preset['name'];
-          return GestureDetector(
-            onTap: () {
-              setState(() => _selectedPreset = preset['name']);
-              _applyAudioSettings(context.read<SongPlayerCubit>().audioPlayer);
-              _saveSettings();
-            },
-            child: Container(
-              margin: EdgeInsets.only(bottom: 10.h),
-              padding: EdgeInsets.all(14.w),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? AppColors.primaryColor.withOpacity(0.15)
-                    : Colors.grey[900],
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                  color: isSelected
-                      ? AppColors.primaryColor
-                      : Colors.grey[800]!,
-                  width: isSelected ? 1.5 : 1,
+  Widget _buildPitchSlider() {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(14.r),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Pitch',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
-              child: Row(
-                children: [
-                  Icon(
-                    preset['icon'] as IconData,
-                    color: isSelected ? AppColors.primaryColor : Colors.grey,
-                    size: 24.sp,
-                  ),
-                  SizedBox(width: 14.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          preset['name'] as String,
-                          style: TextStyle(
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          preset['description'] as String,
-                          style: TextStyle(
-                            fontSize: 11.sp,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
+              Text(
+                '${_pitch.toStringAsFixed(2)}x',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          SliderTheme(
+            data: SliderThemeData(
+              activeTrackColor: AppColors.primaryColor,
+              inactiveTrackColor: Colors.grey[800],
+              thumbColor: AppColors.primaryColor,
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+              trackHeight: 3.h,
+            ),
+            child: Slider(
+              value: _pitch,
+              onChanged: _enabled
+                  ? (val) {
+                      setState(() => _pitch = val);
+                      _push(pitch: val);
+                    }
+                  : null,
+              min: 0.9,
+              max: 1.1,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('0.90x', style: TextStyle(fontSize: 10.sp, color: Colors.grey)),
+              Text('1.10x', style: TextStyle(fontSize: 10.sp, color: Colors.grey)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEqSection() {
+    const labels = ['Bass', 'Low-Mid', 'Mid', 'High-Mid', 'Treble'];
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(14.r),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '5-Band EQ',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              if (_eqCustom)
+                GestureDetector(
+                  onTap: _enabled ? _resetEq : null,
+                  child: Text(
+                    'Reset',
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryColor,
                     ),
                   ),
-                  if (isSelected)
-                    Icon(Icons.check_circle,
-                        color: AppColors.primaryColor, size: 22.sp),
-                ],
-              ),
+                ),
+            ],
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            'Fine-tune each band in dB. Matches the ${_room.name} room curve by default.',
+            style: TextStyle(fontSize: 11.sp, color: Colors.grey),
+          ),
+          SizedBox(height: 8.h),
+          for (var i = 0; i < labels.length; i++)
+            _buildEqRow(i, labels[i]),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEqRow(int index, String label) {
+    final value = (_eqCurve.length > index ? _eqCurve[index] : 0.0)
+        .clamp(-12.0, 12.0);
+    return Row(
+      children: [
+        SizedBox(
+          width: 64.w,
+          child: Text(
+            label,
+            style: TextStyle(fontSize: 12.sp, color: Colors.white70),
+          ),
+        ),
+        Expanded(
+          child: SliderTheme(
+            data: SliderThemeData(
+              activeTrackColor: AppColors.primaryColor,
+              inactiveTrackColor: Colors.grey[800],
+              thumbColor: AppColors.primaryColor,
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 5),
+              trackHeight: 2.5.h,
             ),
-          );
-        })),
+            child: Slider(
+              value: value,
+              onChanged: _enabled
+                  ? (v) => _onEqBandChanged(index, v)
+                  : null,
+              min: -12.0,
+              max: 12.0,
+              divisions: 48,
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 48.w,
+          child: Text(
+            '${value.toStringAsFixed(1)} dB',
+            textAlign: TextAlign.end,
+            style: TextStyle(fontSize: 11.sp, color: Colors.white70),
+          ),
+        ),
       ],
+    );
+  }
+
+  Widget _buildInfoCard() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(14.r),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.info_outline, color: AppColors.primaryColor, size: 18.sp),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: Text(
+              'Spatial audio uses the real Android DSP equalizer and loudness '
+              'enhancer. On desktop or web, volume, speed and pitch still apply.',
+              style: TextStyle(fontSize: 11.sp, color: Colors.grey, height: 1.4),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

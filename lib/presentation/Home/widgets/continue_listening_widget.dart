@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:soundora/data/models/songs/songs_model.dart';
 import 'package:soundora/presentation/Home/cubit/recently_played/recently_played_cubit.dart';
+import 'package:soundora/presentation/Home/pages/see_all_recently_played_page.dart';
 import 'package:soundora/core/config/theme/app_colors.dart';
 import 'package:soundora/presentation/Home/cubit/recently_played/recently_played_state.dart';
 import 'package:soundora/presentation/songsPlayPage/songs_play_page.dart';
@@ -22,7 +23,19 @@ class ContinueListeningWidget extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionHeader('Continue Listening', 'See all', null),
+            _buildSectionHeader(
+              'Continue Listening',
+              'See all',
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        SeeAllRecentlyPlayedPage(songs: state.songs),
+                  ),
+                );
+              },
+            ),
             SizedBox(height: 12.h),
             SizedBox(
               height: 200.h,

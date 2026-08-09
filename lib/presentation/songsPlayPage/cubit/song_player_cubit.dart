@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:soundora/core/services/lyric_alignment.dart';
@@ -47,7 +48,7 @@ class SongPlayerCubit extends Cubit<SongPlayerState> with WidgetsBindingObserver
   Completer<void>? _fullSongResolvedCompleter;
   String? _pendingFullUrl;
   Map<String, String> _pendingFullHeaders = const {};
-  final AudioPlayer audioPlayer = AudioPlayer();
+  late final AudioPlayer audioPlayer;
   final Dio _dio = Dio(BaseOptions(
     headers: {
       'User-Agent': 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36',
@@ -57,6 +58,11 @@ class SongPlayerCubit extends Cubit<SongPlayerState> with WidgetsBindingObserver
   ));
   List<SongModel> _playList = [];
   int _currentIndex = 0;
+
+  /// Number of [loadSong] invocations currently awaiting (each keeps the audio
+  /// source being (re)built). While > 0, [currentIndexStream] changes come from
+  /// our own loads and are ignored so they cannot hijack the user's selection.
+  int _activeLoads = 0;
   String _url = '';
   bool _isFullSong = false;
   Duration _songDuration = Duration.zero;
@@ -94,9 +100,10 @@ class SongPlayerCubit extends Cubit<SongPlayerState> with WidgetsBindingObserver
   Color get dominantColor => _dominantColor;
   MaqamResult? get currentMaqam => _currentMaqam;
 
-  SongPlayerCubit({LyricsCubit? lyricsCubit})
+  SongPlayerCubit({LyricsCubit? lyricsCubit, AudioPipeline? audioPipeline})
       : _lyricsCubit = lyricsCubit,
         super(const SongPlayerLoading()) {
+    audioPlayer = AudioPlayer(audioPipeline: audioPipeline ?? AudioPipeline());
     WidgetsBinding.instance.addObserver(this);
     _subscriptions.add(audioPlayer.durationStream.listen((duration) {
       if (duration != null) {
@@ -117,6 +124,18 @@ class SongPlayerCubit extends Cubit<SongPlayerState> with WidgetsBindingObserver
         _recordFinalListenDuration();
         playNext();
       }
+    }));
+    // Track index changes initiated from outside the app (headset buttons,
+    // notification prev/next, etc.) so the cubit + UI follow the new song.
+    // While our own [loadSong] is running, just_audio emits transient/stale
+    // indices (the old platform's final events during setAudioSource) that must
+    // not hijack the selection to the first song of the list.
+    _subscriptions.add(audioPlayer.currentIndexStream.listen((index) {
+      if (index == null || index < 0 || index >= _playList.length) return;
+      if (_activeLoads > 0) return;
+      if (index == _currentIndex) return;
+      _currentIndex = index;
+      loadSong(_playList, index, _url, skipLoadingEmit: true);
     }));
     _listenLyricsState();
   }
@@ -361,8 +380,11 @@ class SongPlayerCubit extends Cubit<SongPlayerState> with WidgetsBindingObserver
     final streamHeaders = headers;
     _currentPlayUrl = streamUrl;
     _currentPlayHeaders = streamHeaders;
-    await audioPlayer
-        .setAudioSource(_dioAudioSource(streamUrl, headers: streamHeaders));
+    final tag =
+        _playList.isNotEmpty ? _mediaItemFor(_playList[_currentIndex]) : null;
+    final swapped = await _replaceCurrentSource(
+        _dioAudioSource(streamUrl, headers: streamHeaders, tag: tag));
+    if (!swapped) return;
     audioPlayer.play();
     _emitCurrentState();
     _triggerAnalysis(_analysisRequestedForSong,
@@ -509,11 +531,94 @@ class SongPlayerCubit extends Cubit<SongPlayerState> with WidgetsBindingObserver
     }
   }
 
-  StreamAudioSource _dioAudioSource(String url, {Map<String, String>? headers}) {
-    return _DioStreamAudioSource(_dio, url, headers);
+  StreamAudioSource _dioAudioSource(String url,
+      {Map<String, String>? headers, MediaItem? tag}) {
+    return _DioStreamAudioSource(_dio, url, headers, tag);
+  }
+
+  /// Builds the lock-screen / notification metadata for a song.
+  MediaItem _mediaItemFor(SongModel song) {
+    return MediaItem(
+      id: song.id,
+      title: song.title,
+      artist: song.artist,
+      artUri: Uri.tryParse(song.imageUrl),
+    );
+  }
+
+  /// Sets the audio source, returning `false` when a newer load interrupted
+  /// this one (a normal race when songs are switched rapidly). Callers should
+  /// treat `false` as "stop: a newer load owns the player now" instead of
+  /// reporting a failure.
+  Future<bool> _setAudioSource(AudioSource source, {int? initialIndex}) async {
+    try {
+      await audioPlayer.setAudioSource(source, initialIndex: initialIndex);
+      return true;
+    } on PlayerInterruptedException {
+      print('[PLAY] Superseded by a newer load');
+      return false;
+    }
+  }
+
+  /// Returns the best source for a queue item (anything but the currently
+  /// playing song). Prefers a previously resolved, still-valid URL from the
+  /// in-memory cache (Jamendo / YouTube, never the expired Deezer preview);
+  /// otherwise a silent placeholder is used so the queue does not hammer stale
+  /// Deezer preview URLs (they come back 403). When the user navigates to such
+  /// an item, [loadSong] resolves its real URL and rebuilds the queue.
+  StreamAudioSource _queueSourceFor(SongModel song) {
+    final songKey = '${song.title}|${song.artist}';
+    final cached = _jamendoCache[songKey];
+    if (cached != null && cached.isNotEmpty && !_nativeUrlExpired(cached)) {
+      return _dioAudioSource(cached,
+          headers: _ytHeadersByUrl[cached], tag: _mediaItemFor(song));
+    }
+    return _dioAudioSource('about:blank', tag: _mediaItemFor(song));
+  }
+
+  /// Loads the whole list as a queue so the lock-screen / notification
+  /// controls (next/prev) and headset buttons work. The song at
+  /// [_currentIndex] gets the resolved [currentSource]; the rest get the best
+  /// cached source and are replaced with full sources on demand.
+  Future<bool> _loadPlaylist(AudioSource currentSource, List<SongModel> songs) async {
+    final sources = <AudioSource>[
+      for (var i = 0; i < songs.length; i++)
+        if (i == _currentIndex)
+          currentSource
+        else
+          _queueSourceFor(songs[i]),
+    ];
+    final playlist = ConcatenatingAudioSource(children: sources);
+    return _setAudioSource(playlist, initialIndex: _currentIndex);
+  }
+
+  /// Swaps the current queue item for [source] (e.g. a freshly resolved full
+  /// song) without tearing down the rest of the queue. Falls back to a plain
+  /// single-source load if the queue is unavailable. Returns `false` when a
+  /// newer load interrupted the swap.
+  Future<bool> _replaceCurrentSource(StreamAudioSource source) async {
+    final songs = _playList;
+    if (songs.isEmpty) {
+      return _setAudioSource(source);
+    }
+    // just_audio 0.10.6 has no in-place replaceRange on concatenating
+    // sources, so rebuild the queue with the upgraded item at the current
+    // index. The rest of the queue (previews) is preserved, so the
+    // notification prev/next controls keep working.
+    return _loadPlaylist(source, songs);
   }
 
   Future<void> loadSong(
+      List<SongModel> songs, int index, String urlImage, {bool skipLoadingEmit = false}) async {
+    _activeLoads++;
+    try {
+      await _loadSongInternal(songs, index, urlImage, skipLoadingEmit: skipLoadingEmit);
+    } finally {
+      _activeLoads--;
+    }
+  }
+
+  Future<void> _loadSongInternal(
       List<SongModel> songs, int index, String urlImage, {bool skipLoadingEmit = false}) async {
     _trackSkipIfNeeded();
     _listenDurationTimer?.cancel();
@@ -568,7 +673,11 @@ class SongPlayerCubit extends Cubit<SongPlayerState> with WidgetsBindingObserver
         _isFullSong = true;
         _currentPlayUrl = localPath;
         _currentPlayHeaders = const {};
-        await audioPlayer.setFilePath(localPath);
+        final loaded = await _loadPlaylist(AudioSource.uri(
+          Uri.file(localPath),
+          tag: _mediaItemFor(songs[_currentIndex]),
+        ), songs);
+        if (!loaded) return;
       } else {
         // â”€â”€ 0. Instant: known URL from memory cache â”€â”€
         if (_jamendoCache.containsKey(songKey)) {
@@ -641,7 +750,9 @@ class SongPlayerCubit extends Cubit<SongPlayerState> with WidgetsBindingObserver
             _isFullSong = !fallbackUrl.contains('dzcdn.net');
             _currentPlayUrl = fallbackUrl;
             _currentPlayHeaders = const {};
-            await audioPlayer.setAudioSource(_dioAudioSource(fallbackUrl));
+            final loaded = await _loadPlaylist(_dioAudioSource(fallbackUrl,
+                tag: _mediaItemFor(songs[_currentIndex])), songs);
+            if (!loaded) return;
             upgradeInBackground = true;
             backgroundSwapStarted = true;
             unawaited(_resolveAndUpgradeToFull(song, songKey, playGen));
@@ -651,8 +762,12 @@ class SongPlayerCubit extends Cubit<SongPlayerState> with WidgetsBindingObserver
             _isFullSong = !streamUrl.contains('dzcdn.net');
             _currentPlayUrl = streamUrl;
             _currentPlayHeaders = streamHeaders ?? const {};
-            await audioPlayer.setAudioSource(
-                _dioAudioSource(streamUrl, headers: streamHeaders ?? const {}));
+            final loaded = await _loadPlaylist(
+                _dioAudioSource(streamUrl,
+                    headers: streamHeaders ?? const {},
+                    tag: _mediaItemFor(songs[_currentIndex])),
+                songs);
+            if (!loaded) return;
           }
         } else {
           // Play the stored URL (often a preview) instantly; upgrade in background.
@@ -666,16 +781,22 @@ class SongPlayerCubit extends Cubit<SongPlayerState> with WidgetsBindingObserver
           _isFullSong = !songUrl.contains('dzcdn.net');
           _currentPlayUrl = songUrl;
           _currentPlayHeaders = const {};
-          await audioPlayer.setAudioSource(_dioAudioSource(songUrl));
+          final loaded = await _loadPlaylist(_dioAudioSource(songUrl,
+              tag: _mediaItemFor(songs[_currentIndex])), songs);
+          if (!loaded) return;
           upgradeInBackground = true;
         }
       }
-      _loadSyncOffset(song.id.toString(),
-          forFullSong: _isFullSong, sourceKey: _fingerprintFor(_currentPlayUrl,
-              videoId: _currentVideoId()));
-      audioPlayer.play();
-      _emitCurrentState();
-      if (upgradeInBackground) {
+       _loadSyncOffset(song.id.toString(),
+           forFullSong: _isFullSong, sourceKey: _fingerprintFor(_currentPlayUrl,
+               videoId: _currentVideoId()));
+       try {
+         audioPlayer.play();
+       } on PlayerInterruptedException {
+         audioPlayer.stop();
+       }
+       _emitCurrentState();
+       if (upgradeInBackground) {
         // Preview keeps playing; offer the full song right away when the app
         // is visible (never on a locked/backgrounded phone, and never when the
         // user already dismissed the banner twice this session).
@@ -704,7 +825,10 @@ class SongPlayerCubit extends Cubit<SongPlayerState> with WidgetsBindingObserver
             _isFullSong = false;
             _currentPlayUrl = fresh.first.urlSongsbase;
             _currentPlayHeaders = const {};
-            await audioPlayer.setAudioSource(_dioAudioSource(fresh.first.urlSongsbase));
+            final loaded = await _loadPlaylist(_dioAudioSource(
+                fresh.first.urlSongsbase,
+                tag: _mediaItemFor(songs[_currentIndex])), songs);
+            if (!loaded) return;
             audioPlayer.play();
             _emitCurrentState();
             _preloadNextSong();
@@ -770,8 +894,13 @@ class SongPlayerCubit extends Cubit<SongPlayerState> with WidgetsBindingObserver
     final streamHeaders = result.headers;
     _currentPlayUrl = streamUrl;
     _currentPlayHeaders = streamHeaders;
-    await audioPlayer
-        .setAudioSource(_dioAudioSource(streamUrl, headers: streamHeaders));
+    final swapped = await _replaceCurrentSource(
+        _dioAudioSource(streamUrl, headers: streamHeaders, tag: _mediaItemFor(song)));
+    if (!swapped) {
+      _fullSongResolvedCompleter?.complete();
+      _fullSongResolvedCompleter = null;
+      return;
+    }
     audioPlayer.play();
     _emitCurrentState();
     _fullSongResolvedCompleter?.complete();
@@ -1065,18 +1194,36 @@ class SongPlayerCubit extends Cubit<SongPlayerState> with WidgetsBindingObserver
     audioPlayer.seek(duration);
   }
 
-  void playOrpauseSong() async {
-    if (audioPlayer.playing) {
-      await audioPlayer.pause();
-    } else {
-      await audioPlayer.play();
+    void playOrpauseSong() async {
+      try {
+        if (audioPlayer.playing) {
+          await audioPlayer.pause();
+        } else {
+          await audioPlayer.play();
+        }
+      } on PlayerInterruptedException {
+        // Player was interrupted by a newer load — stop the player and reset.
+        audioPlayer.stop();
+      }
+      _emitCurrentState();
     }
-    _emitCurrentState();
-  }
 
   void stopAndDismiss() async {
     await audioPlayer.stop();
-    _emitCurrentState();
+    _playGeneration++;
+    _fullSongBannerTimer?.cancel();
+    _fullSongBannerTimer = null;
+    _playList = [];
+    _currentIndex = 0;
+    _songPosition = Duration.zero;
+    _songDuration = Duration.zero;
+    _currentPlayUrl = '';
+    _currentPlayHeaders = const {};
+    _isFullSong = false;
+    _isLyricsVisible = false;
+    _showFullSongPopup = false;
+    _fullSongResolving = false;
+    if (!isClosed) emit(const SongPlayerLoading());
   }
 
   @override
@@ -1132,13 +1279,23 @@ class _DioStreamAudioSource extends StreamAudioSource {
   final String _url;
   final Map<String, String>? _extraHeaders;
 
-  _DioStreamAudioSource(this._dio, this._url, [this._extraHeaders]);
+  _DioStreamAudioSource(this._dio, this._url, [this._extraHeaders, Object? tag])
+      : super(tag: tag);
 
   @override
   Future<StreamAudioResponse> request([int? start, int? end]) async {
     final uri = Uri.tryParse(_url);
     if (_url.isEmpty || uri == null || uri.host.isEmpty) {
-      throw StateError('Invalid audio URL: $_url');
+      // Queue placeholder (no playable URL yet). Return a silent, empty
+      // response instead of erroring so the queue advances cleanly until the
+      // real URL is resolved by loadSong.
+      return StreamAudioResponse(
+        sourceLength: 0,
+        contentLength: 0,
+        stream: const Stream.empty(),
+        offset: start ?? 0,
+        contentType: 'audio/mpeg',
+      );
     }
     final isDeezer = _url.contains('dzcdn.net') || _url.contains('cdn-preview');
     final rangeHeader = start != null ? _boundedRangeHeader(start, end) : null;

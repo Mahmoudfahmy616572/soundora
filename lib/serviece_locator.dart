@@ -19,6 +19,7 @@ import 'package:soundora/domain/repositories/otp/otp_repo.dart';
 import 'package:soundora/domain/usecase/auth/sighnup_usecase.dart';
 import 'package:soundora/domain/usecase/otp/otp_usecase.dart';
 import 'package:soundora/domain/usecase/songs/get_charts_usecase.dart';
+import 'package:soundora/domain/usecase/songs/get_editorial_picks_usecase.dart';
 import 'package:soundora/domain/usecase/songs/get_music_videos_usecase.dart';
 import 'package:soundora/domain/usecase/songs/get_sound_dna_usecase.dart';
 import 'package:soundora/domain/usecase/songs/get_artist_details_usecase.dart';
@@ -28,6 +29,7 @@ import 'package:soundora/domain/usecase/songs/search_songs_usecase.dart';
 import 'package:soundora/presentation/DownloadedSongs/cubit/download_songs_for_offline_cubit.dart';
 import 'package:soundora/presentation/Gamification/cubit/achievement_cubit.dart';
 import 'package:soundora/presentation/Home/cubit/charts/charts_cubit.dart';
+import 'package:soundora/presentation/Home/cubit/editorial_picks/editorial_picks_cubit.dart';
 import 'package:soundora/presentation/Home/cubit/recently_played/recently_played_cubit.dart';
 import 'package:soundora/presentation/LikedSongs/cubit/favourite_songs_cubit.dart';
 import 'package:soundora/presentation/ListeningParty/cubit/listening_party_cubit.dart';
@@ -44,6 +46,8 @@ import 'package:soundora/presentation/songsPlayPage/cubit/sound_dna/sound_dna_cu
 import 'package:soundora/presentation/LyricsEmotion/cubit/lyrics_emotion_cubit.dart';
 
 import 'package:soundora/presentation/TasteProfile/cubit/taste_profile_cubit.dart';
+
+import 'presentation/SpatialAudio/spatial_audio_engine.dart';
 
 import 'data/sources/songs/get_songs_supabase_servieces.dart';
 import 'domain/usecase/auth/signin_usecase.dart';
@@ -73,6 +77,7 @@ Future<void> intializedDependences() async {
   getIt.registerSingleton<DeezerDataSource>(DeezerDataSourceImpl());
   getIt.registerSingleton<SearchSongsUsecase>(SearchSongsUsecase());
   getIt.registerSingleton<GetChartsUsecase>(GetChartsUsecase());
+  getIt.registerSingleton<GetEditorialPicksUsecase>(GetEditorialPicksUsecase());
 
   // TheAudioDB
   getIt.registerSingleton<AudioDbDataSource>(AudioDbDataSourceImpl());
@@ -107,13 +112,23 @@ Future<void> intializedDependences() async {
 
   // Cubits
   getIt.registerLazySingleton<LyricsCubit>(() => LyricsCubit());
-  getIt.registerLazySingleton<SongPlayerCubit>(() => SongPlayerCubit(lyricsCubit: getIt<LyricsCubit>()));
+  getIt.registerLazySingleton<SongPlayerCubit>(() {
+    final engine = SpatialAudioEngine.instance;
+    final cubit = SongPlayerCubit(
+      lyricsCubit: getIt<LyricsCubit>(),
+      audioPipeline: engine.buildPipeline(),
+    );
+    engine.attach(cubit.audioPlayer);
+    engine.restore();
+    return cubit;
+  });
   getIt.registerLazySingleton<FavouriteSongsCubit>(() => FavouriteSongsCubit()..fetchFavourites());
   getIt.registerLazySingleton<DownloadSongsForOfflineCubit>(() => DownloadSongsForOfflineCubit());
   getIt.registerLazySingleton<NavigationCubit>(() => NavigationCubit());
   getIt.registerLazySingleton<SearchSongsCubit>(() => SearchSongsCubit());
   getIt.registerLazySingleton<RecentlyPlayedCubit>(() => RecentlyPlayedCubit());
   getIt.registerLazySingleton<ChartsCubit>(() => ChartsCubit());
+  getIt.registerLazySingleton<EditorialPicksCubit>(() => EditorialPicksCubit());
 
   // Taste Profile (Milestone 2)
   getIt.registerLazySingleton<TasteProfileCubit>(() => TasteProfileCubit()

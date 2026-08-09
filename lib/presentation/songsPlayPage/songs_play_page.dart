@@ -1559,7 +1559,7 @@ class _LyricsViewportState extends State<_LyricsViewport> {
                         child: TextButton.icon(
                           onPressed: () => Navigator.of(sheetContext).pop(),
                           icon: const Icon(Icons.close),
-                          label: const Text('Ø¥Ù„ØºØ§Ø¡'),
+                          label: const Text('إلغاء'),
                           style: TextButton.styleFrom(
                             foregroundColor: Colors.white.withOpacity(0.7),
                           ),
@@ -1577,7 +1577,7 @@ class _LyricsViewportState extends State<_LyricsViewport> {
                             );
                           },
                           icon: const Icon(Icons.share),
-                          label: const Text('Ù…Ø´Ø§Ø±ÙƒØ© Ø§Ù„Ø¨Ø·Ø§Ù‚Ø©'),
+                          label: const Text('مشاركة البطاقة'),
                           style: FilledButton.styleFrom(
                             backgroundColor: accentColor,
                             foregroundColor: Colors.black,
@@ -1967,12 +1967,16 @@ class _HintOverlay extends StatelessWidget {
                     color: Colors.white.withOpacity(0.7),
                   ),
                   SizedBox(width: 6.w),
-                  Text(
-                    'Ø§Ø¶ØºØ· Ù„Ù„Ø£ØºÙ†ÙŠØ©',
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      color: Colors.white.withOpacity(0.7),
-                      fontWeight: FontWeight.w500,
+                  Flexible(
+                    child: Text(
+                      'اضغط للأغنية',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: Colors.white.withOpacity(0.7),
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ],
@@ -1986,7 +1990,7 @@ class _HintOverlay extends StatelessWidget {
 }
 
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// Emotion Echo â€” colored mist/aura behind recently-sung lines
+// Emotion Echo — colored mist/aura behind recently-sung lines
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class _EmotionEchoData {
@@ -2054,7 +2058,7 @@ class _EmotionEchoPainter extends CustomPainter {
 }
 
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// Breath Canvas â€” subtle breathing pulse between lyric pauses
+// Breath Canvas — subtle breathing pulse between lyric pauses
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class _BreathCanvas extends StatefulWidget {
@@ -2149,7 +2153,7 @@ class _BreathCanvasState extends State<_BreathCanvas>
 }
 
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// Emotion Timeline Scrub â€” colored segments for each lyric line
+// Emotion Timeline Scrub — colored segments for each lyric line
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class _EmotionTimelineScrub extends StatefulWidget {
@@ -2432,7 +2436,7 @@ class _PlayerErrorViewState extends State<_PlayerErrorView>
                   _buildGlowIcon(),
                   SizedBox(height: 30.h),
                   Text(
-                    'ØªØ¹Ø°Ø± ØªØ´ØºÙŠÙ„ Ø§Ù„Ø£ØºÙ†ÙŠØ©',
+                    'تعذر تشغيل الأغنية',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
@@ -2444,7 +2448,7 @@ class _PlayerErrorViewState extends State<_PlayerErrorView>
                   ),
                   SizedBox(height: 10.h),
                   Text(
-                    'ÙŠÙ…ÙƒÙ† ÙŠÙƒÙˆÙ† ÙÙŠÙ‡ Ù…Ø´ÙƒÙ„Ø© ÙÙŠ Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø¥Ù†ØªØ±Ù†ØªØŒ Ø£Ùˆ Ø¥Ù† Ù…ØµØ¯Ø± Ø§Ù„Ø£ØºÙ†ÙŠØ© Ù…Ø´ Ù…ØªØ§Ø­ Ø¯Ù„ÙˆÙ‚ØªÙŠ. Ø¬Ø±Ù‘Ø¨ Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„Ù…Ø­Ø§ÙˆÙ„Ø© Ø£Ùˆ Ø§Ø®ØªØ§Ø± Ø£ØºÙ†ÙŠØ© ØªØ§Ù†ÙŠØ©.',
+                    'يمكن يكون فيه مشكلة في الاتصال بالإنترنت، أو إن مصدر الأغنية مش متاح دلوقتي. جرّب إعادة المحاولة أو اختار أغنية تانية.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.55),
@@ -2570,7 +2574,7 @@ class _PlayerErrorViewState extends State<_PlayerErrorView>
               Icon(Icons.refresh_rounded, size: 20.sp, color: Colors.white),
               SizedBox(width: 10.w),
               Text(
-                'Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„Ù…Ø­Ø§ÙˆÙ„Ø©',
+                'إعادة المحاولة',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 15.sp,
@@ -2609,7 +2613,7 @@ class _PlayerErrorViewState extends State<_PlayerErrorView>
               ),
               SizedBox(width: 8.w),
               Text(
-                'Ø±Ø¬ÙˆØ¹',
+                'رجوع',
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.75),
                   fontSize: 15.sp,
@@ -2665,7 +2669,7 @@ class _FullSongReadyBanner extends StatelessWidget {
             SizedBox(width: 10.w),
             Expanded(
               child: Text(
-                'Ø¨Ø±ÙŠÙÙŠÙˆ 30 Ø«Ø§Ù†ÙŠØ© â€” Ø§Ø¶ØºØ· Ù„Ù„ØªØ´ØºÙŠÙ„ Ø§Ù„ÙƒØ§Ù…Ù„',
+                'بريفيو 30 ثانية — اضغط للتشغيل الكامل',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 13.sp,
@@ -2693,7 +2697,7 @@ class _FullSongReadyBanner extends StatelessWidget {
                         ),
                       )
                     : Text(
-                        'ØªØ´ØºÙŠÙ„',
+                        'تشغيل',
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 12.sp,
@@ -2767,7 +2771,7 @@ class _FullSongChip extends StatelessWidget {
                   ),
                 SizedBox(width: 6.w),
                 Text(
-                  resolving ? 'Ø¬Ø§Ø±ÙŠ Ø§Ù„ØªØ­Ù…ÙŠÙ„...' : 'Ø´ØºÙ‘Ù„ Ø§Ù„Ø£ØºÙ†ÙŠØ© Ø§Ù„ÙƒØ§Ù…Ù„Ø©',
+                  resolving ? 'جاري التحميل...' : 'شغّل الأغنية الكاملة',
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.9),
                     fontSize: 12.sp,

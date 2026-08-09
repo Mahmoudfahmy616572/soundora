@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:soundora/core/config/theme/app_theme.dart';
 import 'package:soundora/core/services/offline_downloads.dart';
@@ -67,6 +68,13 @@ Future<void> main() async {
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL'] ?? '',
     anonKey: dotenv.env['SUPABASE_ANON_KEY'] ?? '',
+  );
+
+  await JustAudioBackground.init(
+    androidNotificationChannelId: 'com.soundora.channel.audio',
+    androidNotificationChannelName: 'Soundora playback',
+    androidNotificationOngoing: true,
+    androidStopForegroundOnPause: true,
   );
 
   await intializedDependences();
