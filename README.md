@@ -14,3 +14,10 @@ Soundora is a smart Arabic music experience built with **Flutter** and **Supabas
 * **Backend:** [Supabase](https://supabase.com) (Database, Auth, Storage)
 * **Audio Engine:** `just_audio`
 * **Architecture:** Clean Architecture (Data, Domain, & Presentation layers)
+
+## License
+
+© Mahmoud Fahmy. All rights reserved — see [`LICENSE`](LICENSE).
+The source is public for portfolio review only; copying it into another product is not
+permitted without a written licence. Licensing enquiries: **mahmoudfahmeyy@gmail.com**
+
